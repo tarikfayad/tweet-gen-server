@@ -14,9 +14,15 @@ const axiosAPI = axios.create({
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/:service/:organization/:tournament/:button', async (req, res) => {
-  const response = await axiosAPI.get('tournaments/' + req.params.organization + '-' + req.params.tournament + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
-  return res.status(200).json(await parseMatches(response.data, req.params.button, req.params.service, req.params.organization, req.params.tournament));
+app.post('/tweet-gen', async (req, res) => {
+  try {
+    console.log('FIND ME!');
+    console.log(req.body);
+    const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
+    return res.status(200).json(await parseMatches(response.data, req.body.button, req.body.service, req.body.organization, req.body.tournament_slug));
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 // 404 error handler
@@ -52,7 +58,9 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 async function parseMatches(matches, button, service, organization, tournament) {
   switch (button) {
     case 'starting-soon':
-      return [];
+      return [{
+        'message': 'Boutta start in about 30 minutes! 💪\n\n[EMBED LATEST REMINDER TWEET]'
+      }];
       break;
     case 'kickoff':
       return [];
