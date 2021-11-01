@@ -1,0 +1,25 @@
+{
+  "name": "tweet-gen-server",
+  "version": "1.0.0",
+  "description": "The server for WASD's Tweet Generator",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tarikfayad/tweet-gen-server.git"
+  },
+  "author": "Tarik Fayad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tarikfayad/tweet-gen-server/issues"
+  },
+  "homepage": "https://github.com/tarikfayad/tweet-gen-server#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  }
+}
