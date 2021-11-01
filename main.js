@@ -17,8 +17,6 @@ app.use(cors());
 
 app.post('/tweet-gen', async (req, res) => {
   try {
-    console.log('FIND ME!');
-    console.log(req.body);
     const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
     return res.status(200).json(await parseMatches(response.data, req.body));
   } catch (e) {
@@ -70,15 +68,25 @@ async function parseMatches(matches, body) {
       }];
       break;
     case 'top-16':
-      return [];
+      await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug']);
+      return [{
+        'message': "Top 16 is decided!\n\nStop by the stream and place your bets:\n\n⚔️ " + body.bracket + "\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
+      }];
       break;
     case 'top-8':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
         var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
         var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
         var winners = findMatchesInRound(matches, winnersRound);
+        var winnersHandles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], winners);
         var losers = findMatchesInRound(matches, losersRound);
-        return winners.concat(losers);
+        var losersHandles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losers);
+
+        return [{
+          'message': '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n@' + winnersHandles[0]['player1'] + ' vs @' + winnersHandles[0]['player2'] + '\n@' + winnersHandles[1]['player1'] + ' vs @' + winnersHandles[1]['player2'] + '\n\nl:\n@' + losersHandles[0]['player1'] + ' vs @' + losersHandles[0]['player2'] + '\n@' + losersHandles[1]['player1'] + ' vs @' + losersHandles[1]['player2'] +'\n\n📺 https://twitch.tv/ImpurestClub'
+        }]
+
+        return winnersHandles.concat(losersHandles);
       } else {
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
@@ -88,7 +96,11 @@ async function parseMatches(matches, body) {
     case 'top-4':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
         var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
-        return findMatchesInRound(matches, winnersFinalsRound);
+        var winnersFinal =  findMatchesInRound(matches, winnersFinalsRound);
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], winnersFinal);
+        return [{
+          'message': "We're in the Top 4 home stretch!\n\nFirst up ➡️ @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub"
+        }]
       } else {
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
@@ -97,7 +109,11 @@ async function parseMatches(matches, body) {
       break;
     case 'losers-semis':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
-        return [matches[matches.length-4]];
+        var losersSemi =  matches[matches.length-4];
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersSemi);
+        return [{
+          'message': "⏬ Losers Semifinals ⏬\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
       } else {
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
@@ -106,8 +122,12 @@ async function parseMatches(matches, body) {
       break;
     case 'losers-finals':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var losersFinal =  matches[matches.length-3];
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersFinal);
+        return [{
+          'message': "⚠️ Losers Finals ⚠️\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
       } else {
-        return [matches[matches.length-3]];
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
         }];
@@ -115,8 +135,12 @@ async function parseMatches(matches, body) {
       break;
     case 'grand-finals':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var grandFinals =  matches[matches.length-2];
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinals);
+        return [{
+          'message': "🚨 GRAND FINALS! 🚨\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
       } else {
-        return [matches[matches.length-2]];
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
         }];
@@ -124,8 +148,12 @@ async function parseMatches(matches, body) {
       break;
     case 'reset':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var grandFinalsReset =  matches[matches.length-1];
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinalsReset);
+        return [{
+          'message': "WE HAVE A RESET!\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
       } else {
-        return [matches[matches.length-1]];
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
         }];
@@ -170,7 +198,65 @@ async function isTournamentInProgress(service, organization, tournament) {
 }
 
 async function getTwitterHandles(service, organization, tournament, matches) {
+  var handles = [];
+  var playerIDs = [];
 
+  matches.forEach((tourneyMatch, i) => {
+    var pIDs = {
+      'player1_id': tourneyMatch['player1_id'],
+      'player2_id': tourneyMatch['player2_id']
+    }
+    playerIDs.push(pIDs);
+  });
+  const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '/participants.json?api_key=' + process.env.CHALLONGE_API_KEY);
+
+  playerIDs.forEach((tourneyMatch, i) => {
+    let player1;
+    let player2;
+
+    response.data.forEach((participant, n) => {
+      let dictionary = participant['participant'];
+
+      if (dictionary['id'] === tourneyMatch['player1_id']) {
+        let customResponses = dictionary['custom_field_response'];
+        let keys = Object.keys(customResponses);
+        keys.forEach((key, i) => {
+          if (customResponses[key] !== 'true') {
+            if (customResponses[key].toUpperCase() === 'N/A') {
+              player1 = dictionary['name'];
+            } else {
+              player1 = customResponses[key];
+            }
+          }
+        });
+      }
+
+      if (dictionary['id'] === tourneyMatch['player2_id']) {
+        let customResponses = dictionary['custom_field_response'];
+        let keys = Object.keys(customResponses);
+        keys.forEach((key, i) => {
+          if (customResponses[key] !== 'true') {
+            if (customResponses[key].toUpperCase() === 'N/A') {
+              player2 = dictionary['name'];
+            } else {
+              player2 = customResponses[key];
+            }
+          }
+        });
+      }
+    });
+
+    if (typeof player1 !== 'undefined' && typeof player2 !== 'undefined') {
+      handles.push ({
+        'player1': player1.replace('@', ''),
+        'player2': player2.replace('@', '')
+      });
+    }
+
+  });
+
+  console.log(handles);
+  return handles;
 }
 
 function getHashtags(game) {
