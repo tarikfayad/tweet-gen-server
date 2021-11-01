@@ -194,7 +194,7 @@ async function isTournamentInProgress(service, organization, tournament) {
   gameName = tournamentDictionary['game_name']; //Yes this is a janky place to set the game name.
   tournamentName = tournamentDictionary['name'];
   console.log(tournamentDictionary['state']);
-  if (tournamentDictionary['state'] === 'complete') {
+  if (tournamentDictionary['state'] === 'complete' || tournamentDictionary['state'] === 'pending') {
     return false;
   } else {return true;}
 }
