@@ -188,10 +188,12 @@ async function isTournamentInProgress(service, organization, tournament) {
   // Will eventually use the below to support Smash.gg
   // if (service === 'challonge') {
   // }
+  console.log('Checking Tournament Status . . .');
   const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '.json?api_key=' + process.env.CHALLONGE_API_KEY);
   var tournamentDictionary = response.data['tournament'];
   gameName = tournamentDictionary['game_name']; //Yes this is a janky place to set the game name.
   tournamentName = tournamentDictionary['name'];
+  console.log(tournamentDictionary['state']);
   if (tournamentDictionary['state'] === 'complete') {
     return false;
   } else {return true;}
