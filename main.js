@@ -83,7 +83,7 @@ async function parseMatches(matches, body) {
         var losersHandles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losers);
 
         return [{
-          'message': '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n@' + winnersHandles[0]['player1'] + ' vs @' + winnersHandles[0]['player2'] + '\n@' + winnersHandles[1]['player1'] + ' vs @' + winnersHandles[1]['player2'] + '\n\nl:\n@' + losersHandles[0]['player1'] + ' vs @' + losersHandles[0]['player2'] + '\n@' + losersHandles[1]['player1'] + ' vs @' + losersHandles[1]['player2'] +'\n\n📺 https://twitch.tv/ImpurestClub'
+          'message': '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winnersHandles[0]['player1'] + ' vs ' + winnersHandles[0]['player2'] + '\n' + winnersHandles[1]['player1'] + ' vs ' + winnersHandles[1]['player2'] + '\n\nl:\n' + losersHandles[0]['player1'] + ' vs ' + losersHandles[0]['player2'] + '\n' + losersHandles[1]['player1'] + ' vs ' + losersHandles[1]['player2'] +'\n\n📺 https://twitch.tv/ImpurestClub'
         }]
 
         return winnersHandles.concat(losersHandles);
@@ -99,7 +99,7 @@ async function parseMatches(matches, body) {
         var winnersFinal =  findMatchesInRound(matches, winnersFinalsRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], winnersFinal);
         return [{
-          'message': "We're in the Top 4 home stretch!\n\nFirst up ➡️ @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub"
+          'message': "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub"
         }]
       } else {
         return [{
@@ -113,7 +113,7 @@ async function parseMatches(matches, body) {
         var losersSemi = findMatchesInRound(matches, losersSemiRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersSemi);
         return [{
-          'message': "⏬ Losers Semifinals ⏬\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+          'message': "⏬ Losers Semifinals ⏬\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
         }]
       } else {
         return [{
@@ -127,7 +127,7 @@ async function parseMatches(matches, body) {
         var losersFinal =  findMatchesInRound(matches, losersFinalsRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersFinal);
         return [{
-          'message': "⚠️ Losers Finals ⚠️\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+          'message': "⚠️ Losers Finals ⚠️\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
         }]
       } else {
         return [{
@@ -141,7 +141,7 @@ async function parseMatches(matches, body) {
         var grandFinals =  findMatchesInRound(matches, grandFinalsRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinals);
         return [{
-          'message': "🚨 GRAND FINALS! 🚨\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+          'message': "🚨 GRAND FINALS! 🚨\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
         }]
       } else {
         return [{
@@ -155,7 +155,7 @@ async function parseMatches(matches, body) {
         var grandFinalsReset =  findMatchesInRound(matches, grandFinalsResetRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinalsReset);
         return [{
-          'message': "WE HAVE A RESET!\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+          'message': "WE HAVE A RESET!\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
         }]
       } else {
         return [{
@@ -231,7 +231,8 @@ async function getTwitterHandles(service, organization, tournament, matches) {
             if (customResponses[key].toUpperCase() === 'N/A') {
               player1 = dictionary['name'];
             } else {
-              player1 = customResponses[key];
+              let tHandle = customResponses[key];
+              player1 = '@' + tHandle.replace('@', '');
             }
           }
         });
@@ -254,8 +255,8 @@ async function getTwitterHandles(service, organization, tournament, matches) {
 
     if (typeof player1 !== 'undefined' && typeof player2 !== 'undefined') {
       handles.push ({
-        'player1': player1.replace('@', ''),
-        'player2': player2.replace('@', '')
+        'player1': player1,
+        'player2': player2
       });
     }
 
