@@ -109,7 +109,8 @@ async function parseMatches(matches, body) {
       break;
     case 'losers-semis':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
-        var losersSemi =  matches[matches.length-4];
+        var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
+        var losersSemi = findMatchesInRound(matches, losersSemiRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersSemi);
         return [{
           'message': "⏬ Losers Semifinals ⏬\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
@@ -122,7 +123,8 @@ async function parseMatches(matches, body) {
       break;
     case 'losers-finals':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
-        var losersFinal =  matches[matches.length-3];
+        var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
+        var losersFinal =  findMatchesInRound(matches, losersFinalsRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersFinal);
         return [{
           'message': "⚠️ Losers Finals ⚠️\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
@@ -135,7 +137,8 @@ async function parseMatches(matches, body) {
       break;
     case 'grand-finals':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
-        var grandFinals =  matches[matches.length-2];
+        var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
+        var grandFinals =  findMatchesInRound(matches, grandFinalsRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinals);
         return [{
           'message': "🚨 GRAND FINALS! 🚨\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
@@ -148,7 +151,8 @@ async function parseMatches(matches, body) {
       break;
     case 'reset':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
-        var grandFinalsReset =  matches[matches.length-1];
+        var grandFinalsResetRound = parseInt(matches[matches.length-1]['match']['round']);
+        var grandFinalsReset =  findMatchesInRound(matches, grandFinalsResetRound);
         var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinalsReset);
         return [{
           'message': "WE HAVE A RESET!\n\n🥊 @" + handles[0]['player1'] + " vs @" + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
