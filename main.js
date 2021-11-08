@@ -171,7 +171,7 @@ async function parseMatches(matches, body) {
       } else {
         var finalResults = await getFinalResults(body['service'], body['organization'], body['tournament_slug'])
         return [{
-          'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket:\nVOD:'
+          'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
         }];
       }
     break;
