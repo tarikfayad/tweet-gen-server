@@ -264,8 +264,6 @@ async function getTwitterHandles(service, organization, tournament, matches) {
     }
 
   });
-
-  console.log(handles);
   return handles;
 }
 
@@ -312,7 +310,7 @@ async function getFinalResults(service, organization, tournament, matches) {
   } else {
     for (var i = 0; i < 8; i++) {
       let participant = toSort[i];
-      console.log(participant);
+
       let customResponses = participant['participant']['custom_field_response'];
       let keys = Object.keys(customResponses);
       keys.forEach((key, j) => {
