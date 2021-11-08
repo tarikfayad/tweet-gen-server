@@ -169,7 +169,10 @@ async function parseMatches(matches, body) {
           'error': '⚠️ This command only works if the bracket is COMPLETED.'
         }];
       } else {
-        return [];
+        var finalResults = await getFinalResults(body['service'], body['organization'], body['tournament_slug'])
+        return [{
+          'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket:\nVOD:'
+        }];
       }
     break;
     default:
@@ -264,6 +267,94 @@ async function getTwitterHandles(service, organization, tournament, matches) {
 
   console.log(handles);
   return handles;
+}
+
+async function getFinalResults(service, organization, tournament, matches) {
+  console.log('Getting Tournament Results . . .');
+
+  var results = '';
+  var topThree = ['🏆', '🥈', '🥉'];
+
+  const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '/participants.json?api_key=' + process.env.CHALLONGE_API_KEY);
+  var participants = response.data;
+  var toSort = [];
+
+  participants.forEach((item, i) => {
+    if (item['participant']['final_rank'] !== null) {
+      toSort.push(item);
+    }
+  });
+
+  toSort.sort((player1, player2) => {
+    return compareResults(player1, player2);
+  });
+
+  var player;
+
+  if (toSort.length < 16) {
+    // Return top 3 if there are less than 16 entries
+    for (var i = 0; i < 3; i++) {
+      let participant = toSort[i];
+      let customResponses = participant['participant']['custom_field_response'];
+      let keys = Object.keys(customResponses);
+      keys.forEach((key, j) => {
+        if (customResponses[key] !== 'true') {
+          if (customResponses[key].toUpperCase() === 'N/A') {
+            player = dictionary['name'];
+          } else {
+            let tHandle = customResponses[key];
+            player = '@' + tHandle.replace('@', '');
+          }
+          results = results + topThree[i] + ' ' + player + '\n';
+        }
+      });
+    }
+  } else {
+    for (var i = 0; i < 8; i++) {
+      let participant = toSort[i];
+      console.log(participant);
+      let customResponses = participant['participant']['custom_field_response'];
+      let keys = Object.keys(customResponses);
+      keys.forEach((key, j) => {
+        if (customResponses[key] !== 'true') {
+          if (customResponses[key].toUpperCase() === 'N/A') {
+            player = participant['participant']['name'];
+            player = player + ' ()';
+          } else {
+            let tHandle = customResponses[key];
+            player = '@' + tHandle.replace('@', '');
+            player = player + ' ()';
+          }
+          let position;
+          if (i + 1 < 6) {
+            position = i + 1;
+          } else if (i + 1 === 6) {
+            position = 5;
+          } else {
+            position = 7;
+          }
+          results = results + position.toString() + '. ' + player + '\n';
+        }
+      });
+    }
+  }
+
+  return results;
+}
+
+function compareResults(player1, player2) {
+  const pla1 = player1['participant']['final_rank'];
+  const pla2 = player2['participant']['final_rank'];
+
+  if (pla1 < pla2) {
+    return -1;
+  }
+
+  if (pla1 > pla2) {
+    return 1;
+  }
+
+  return 0;
 }
 
 function getHashtags(game) {
