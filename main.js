@@ -249,7 +249,8 @@ async function getTwitterHandles(service, organization, tournament, matches) {
             if (customResponses[key].toUpperCase() === 'N/A') {
               player2 = dictionary['name'];
             } else {
-              player2 = customResponses[key];
+              let tHandle = customResponses[key];
+              player2 = '@' + tHandle.replace('@', '');
             }
           }
         });
