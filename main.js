@@ -55,6 +55,17 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 //Yes I know it's a little messy to pass along all of these variables,
 //but it's the path of least resistance to make sure that the correct info get's spit out.
 async function parseMatches(matches, body) {
+  if(body["com3"] === undefined)  {
+    body.push({
+    key:   "com3",
+    value: ""
+  });
+  if(body["com4"] === undefined)  {
+    body.push({
+    key:   "com4",
+    value: ""
+  });
+  }
   switch (body.button) {
     case 'starting-soon':
       return [{
