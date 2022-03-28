@@ -55,18 +55,6 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 //Yes I know it's a little messy to pass along all of these variables,
 //but it's the path of least resistance to make sure that the correct info get's spit out.
 async function parseMatches(matches, body) {
-  if(body["com3"] === undefined)  {
-    body.push({
-    key:   "com3",
-    value: ""
-    });
-  }
-  if(body["com4"] === undefined)  {
-    body.push({
-    key:   "com4",
-    value: ""
-    });
-  }
   switch (body.button) {
     case 'starting-soon':
       return [{
@@ -76,7 +64,7 @@ async function parseMatches(matches, body) {
     case 'kickoff':
       await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug']);
       return [{
-        'message': "Aaaand we're live with " + tournamentName + "!\n\n🎙️ @" + body.com1.replace("@", "") + " & @" + body.com2.replace("@", "") + " | @" + body.com3.replace("@", "") + " & @" + body.com4.replace("@", "") + "\n⚔️ " + body.bracket + "\n\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
+        'message': "Aaaand we're live with " + tournamentName + "!\n\n🎙️ @" + body.com1.replace("@", "") + " & @" + body.com2.replace("@", "") + " | @" + "\n⚔️ " + body.bracket + "\n\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
       }];
       break;
     case 'top-16':
