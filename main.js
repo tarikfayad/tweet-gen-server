@@ -59,12 +59,13 @@ async function parseMatches(matches, body) {
     body.push({
     key:   "com3",
     value: ""
-  });
+    });
+  }
   if(body["com4"] === undefined)  {
     body.push({
     key:   "com4",
     value: ""
-  });
+    });
   }
   switch (body.button) {
     case 'starting-soon':
