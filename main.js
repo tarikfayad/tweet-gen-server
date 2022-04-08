@@ -370,6 +370,9 @@ function getHashtags(game) {
     case 'Melty Blood: Type Lumina':
       return '#MBTL #MBTL_Tournament'
       break;
+    case 'BlazBlue: Central Fiction':
+      return '#BBCF #BlazBlue'
+      break;
     default:
   }
 }
