@@ -336,6 +336,8 @@ async function getUsernamesAndScores(service, organization, tournament, matches)
     let player2;
     let scores = tourneyMatch['scores_csv'];
 
+    console.log(scores);
+
     let player1score = scores.split("-")[0];
     let player2score = scores.split("-")[1];
 
