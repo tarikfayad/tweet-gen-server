@@ -193,13 +193,15 @@ async function parseMatches(matches, body) {
             }
           ]
         }];
+
+        return winners.concat(losers);
       } else {
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
         }];
       }
       break;
-    default: 
+    default:
   }
 }
 
