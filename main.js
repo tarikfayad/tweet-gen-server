@@ -180,11 +180,28 @@ async function parseMatches(matches, body) {
 
     case 'populate-top-8':
       if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
-        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
+        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2
+        var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
+        var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
+
         var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
-        var winners = findMatchesInRound(matches, winnersRound);
+        var losersQuarterRound = parseInt(matches[matches.length-5]['match']['round']);
+        var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
+        var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
+
+        var winnersTop8 = findMatchesInRound(matches, winnersRound);
+        var winnersFinals = findMatchesInRound(matches, winnersFinalsRound);
+        var grandFinals = findMatchesInRound(matches, grandFinalsRound);
+
+        var losersTop8 = findMatchesInRound(matches, losersRound);
+        var losersQuarters = findMatchesInRound(matches, losersQuarterRound);
+        var losersSemis = findMatchesInRound(matches, losersSemiRound);
+        var losersFinals = findMatchesInRound(matches, losersFinalsRound);
+
+        let winners = winnersTop8.concat(winnersFinals, grandFinals)
+        let losers = losersTop8.concat(losersQuarters, losersSemis, losersFinals)
+
         var winnersHandles = await getUsernames(body['service'], body['organization'], body['tournament_slug'], winners);
-        var losers = findMatchesInRound(matches, losersRound);
         var losersHandles = await getUsernames(body['service'], body['organization'], body['tournament_slug'], losers);
 
         return [{
