@@ -352,6 +352,11 @@ async function getUsernames(service, organization, tournament, matches) {
         'player1': player1,
         'player2': player2
       });
+    } else {
+      handles.push ({
+        'player1': '',
+        'player2': ''
+      });
     }
 
   });
