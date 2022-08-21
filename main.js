@@ -319,7 +319,8 @@ async function getUsernamesAndScores(service, organization, tournament, matches)
   matches.forEach((tourneyMatch, i) => {
     var pIDs = {
       'player1_id': tourneyMatch['player1_id'],
-      'player2_id': tourneyMatch['player2_id']
+      'player2_id': tourneyMatch['player2_id'],
+      'scores_csv': tourneyMatch['scores_csv']
     }
     playerIDs.push(pIDs);
   });
