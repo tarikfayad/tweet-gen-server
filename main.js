@@ -318,7 +318,7 @@ async function getTwitterHandles(service, organization, tournament, matches) {
   return handles;
 }
 
-async function getUsernames(service, organization, tournament, matches) {
+async function getUsernamesAndScores(service, organization, tournament, matches) {
   var handles = [];
   var playerIDs = [];
 
@@ -334,6 +334,10 @@ async function getUsernames(service, organization, tournament, matches) {
   playerIDs.forEach((tourneyMatch, i) => {
     let player1;
     let player2;
+    let scores = tourneyMatch['scores_csv'];
+
+    let player1score = scores.split("-")[0];
+    let player2score = scores.split("-")[1];
 
     response.data.forEach((participant, n) => {
       let dictionary = participant['participant'];
@@ -358,7 +362,9 @@ async function getUsernames(service, organization, tournament, matches) {
     if (typeof player1 !== 'undefined' && typeof player2 !== 'undefined') {
       handles.push ({
         'player1': player1,
-        'player2': player2
+        'player2': player2,
+        'player1score': player1score,
+        'player2score': player2score
       });
     }
 
