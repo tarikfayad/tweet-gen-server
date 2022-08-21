@@ -347,15 +347,18 @@ async function getUsernames(service, organization, tournament, matches) {
       }
     });
 
+    if (typeof player1 === 'undefined') {
+      player1 = '';
+    }
+
+    if (typeof player2 === 'undefined') {
+      player2 = '';
+    }
+
     if (typeof player1 !== 'undefined' && typeof player2 !== 'undefined') {
       handles.push ({
         'player1': player1,
         'player2': player2
-      });
-    } else {
-      handles.push ({
-        'player1': '',
-        'player2': ''
       });
     }
 
