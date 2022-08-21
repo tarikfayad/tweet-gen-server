@@ -174,7 +174,31 @@ async function parseMatches(matches, body) {
           'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
         }];
       }
-    break;
+      break;
+
+    case 'populate-top-8':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
+        var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
+        var winners = findMatchesInRound(matches, winnersRound);
+        var losers = findMatchesInRound(matches, losersRound);
+
+        return [{
+          'matches': [
+            {
+              'winners': winners
+            },
+            {
+              'losers': losers
+            }
+          ]
+        }];
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
     default:
 
   }
@@ -372,6 +396,15 @@ function getHashtags(game) {
       break;
     case 'BlazBlue: Central Fiction':
       return '#BBCF #BlazBlue'
+      break;
+    case 'Guilty Gear XX Accent Core':
+      return '#GGACPR #GuiltyGear'
+      break;
+    case 'DNF Duel':
+      return '#DNF #DNFDuel'
+      break;
+    case 'Persona 4 Arena Ultimax':
+      return '#P4AU #Persona'
       break;
     default:
   }
