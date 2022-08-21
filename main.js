@@ -183,15 +183,17 @@ async function parseMatches(matches, body) {
         var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
         var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
         var winners = findMatchesInRound(matches, winnersRound);
+        var winnersHandles = await getUsernames(body['service'], body['organization'], body['tournament_slug'], winners);
         var losers = findMatchesInRound(matches, losersRound);
+        var losersHandles = await getUsernames(body['service'], body['organization'], body['tournament_slug'], losers);
 
         return [{
           'matches': [
             {
-              'winners': winners
+              'winners': winnersHandles
             },
             {
-              'losers': losers
+              'losers': losersHandles
             }
           ]
         }];
@@ -279,6 +281,46 @@ async function getTwitterHandles(service, organization, tournament, matches) {
             }
           }
         });
+      }
+    });
+
+    if (typeof player1 !== 'undefined' && typeof player2 !== 'undefined') {
+      handles.push ({
+        'player1': player1,
+        'player2': player2
+      });
+    }
+
+  });
+  return handles;
+}
+
+async function getUsernames(service, organization, tournament, matches) {
+  var handles = [];
+  var playerIDs = [];
+
+  matches.forEach((tourneyMatch, i) => {
+    var pIDs = {
+      'player1_id': tourneyMatch['player1_id'],
+      'player2_id': tourneyMatch['player2_id']
+    }
+    playerIDs.push(pIDs);
+  });
+  const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '/participants.json?api_key=' + process.env.CHALLONGE_API_KEY);
+
+  playerIDs.forEach((tourneyMatch, i) => {
+    let player1;
+    let player2;
+
+    response.data.forEach((participant, n) => {
+      let dictionary = participant['participant'];
+
+      if (dictionary['id'] === tourneyMatch['player1_id']) {
+        player1 = dictionary['name'];
+      }
+
+      if (dictionary['id'] === tourneyMatch['player2_id']) {
+        player2 = dictionary['name'];
       }
     });
 
