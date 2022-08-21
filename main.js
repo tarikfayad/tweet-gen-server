@@ -201,12 +201,6 @@ async function parseMatches(matches, body) {
         let winners = winnersTop8.concat(winnersFinals, grandFinals)
         let losers = losersTop8.concat(losersQuarters, losersSemis, losersFinals)
 
-        console.log('WINNERS');
-        console.log(winners);
-
-        console.log('LOSERS');
-        console.log(losers);
-
         var winnersHandles = await getUsernamesAndScores(body['service'], body['organization'], body['tournament_slug'], winners);
         var losersHandles = await getUsernamesAndScores(body['service'], body['organization'], body['tournament_slug'], losers);
 
@@ -332,6 +326,7 @@ async function getUsernamesAndScores(service, organization, tournament, matches)
   const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '/participants.json?api_key=' + process.env.CHALLONGE_API_KEY);
 
   playerIDs.forEach((tourneyMatch, i) => {
+    console.log(tourneyMatch);
     let player1;
     let player2;
     let player1score;
