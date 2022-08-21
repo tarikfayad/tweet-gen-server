@@ -333,6 +333,7 @@ async function getUsernamesAndScores(service, organization, tournament, matches)
     let player1score;
     let player2score
     let scores = tourneyMatch['scores_csv'];
+    console.log(scores);
 
     if (typeof scores !== 'undefined') {
       player1score = scores.split('-')[0];
@@ -341,6 +342,9 @@ async function getUsernamesAndScores(service, organization, tournament, matches)
       player1score = '';
       player2score = '';
     }
+
+    console.log(player1score);
+    console.log(player2score);
 
     response.data.forEach((participant, n) => {
       let dictionary = participant['participant'];
