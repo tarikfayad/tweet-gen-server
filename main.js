@@ -55,19 +55,7 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 //Yes I know it's a little messy to pass along all of these variables,
 //but it's the path of least resistance to make sure that the correct info get's spit out.
 async function parseMatches(matches, body) {
-<<<<<<< HEAD
-  if (body['service'] === 'challonge') {
-    parseMatchesChallonge(matches, body);
-  } else {
-    parseMatchesStart();
-  }
-}
-
-async function parseMatchesChallonge(matches, body) {
-  console.log('BUTTON CHALLONGE:');
-=======
   console.log('BUTTON:');
->>>>>>> parent of e26526e (Initial Start.gg Integration)
   console.log(body.button);
   switch (body.button) {
     case 'starting-soon':
