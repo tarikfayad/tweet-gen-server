@@ -56,9 +56,9 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 //but it's the path of least resistance to make sure that the correct info get's spit out.
 async function parseMatches(matches, body) {
   if (body['service'] === 'challonge') {
-    parseMatchesChallonge(matches, body);
+    await parseMatchesChallonge(matches, body);
   } else {
-    parseMatchesStart();
+    await parseMatchesStart();
   }
 }
 
