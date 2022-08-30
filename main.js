@@ -63,7 +63,7 @@ async function parseMatches(matches, body) {
 }
 
 async function parseMatchesChallonge(matches, body) {
-  console.log('BUTTON:');
+  console.log('BUTTON CHALLONGE:');
   console.log(body.button);
   switch (body.button) {
     case 'starting-soon':
