@@ -55,7 +55,185 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 //Yes I know it's a little messy to pass along all of these variables,
 //but it's the path of least resistance to make sure that the correct info get's spit out.
 async function parseMatches(matches, body) {
+  if (body['service'] === 'challonge') {
+    parseMatchesChallonge(matches, body);
+  } else {
+    parseMatchesStart();
+  }
+}
+
+async function parseMatchesChallonge(matches, body) {
   console.log('BUTTON:');
+  console.log(body.button);
+  switch (body.button) {
+    case 'starting-soon':
+      return [{
+        'message': 'Boutta start in about 30 minutes! 💪\n\n[EMBED LATEST REMINDER TWEET]'
+      }];
+      break;
+    case 'kickoff':
+      await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug']);
+      return [{
+        'message': "Aaaand we're live with " + tournamentName + "!\n\n🎙️ @" + body.com1.replace("@", "") + " & @" + body.com2.replace("@", "") + "\n⚔️ " + body.bracket + "\n\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
+      }];
+      break;
+    case 'top-16':
+      await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug']);
+      return [{
+        'message': "Top 16 is decided!\n\nStop by the stream and place your bets:\n\n⚔️ " + body.bracket + "\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
+      }];
+      break;
+    case 'top-8':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
+        var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
+        var winners = findMatchesInRound(matches, winnersRound);
+        var winnersHandles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], winners);
+        var losers = findMatchesInRound(matches, losersRound);
+        var losersHandles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losers);
+
+        return [{
+          'message': '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winnersHandles[0]['player1'] + ' vs ' + winnersHandles[0]['player2'] + '\n' + winnersHandles[1]['player1'] + ' vs ' + winnersHandles[1]['player2'] + '\n\nl:\n' + losersHandles[0]['player1'] + ' vs ' + losersHandles[0]['player2'] + '\n' + losersHandles[1]['player1'] + ' vs ' + losersHandles[1]['player2'] +'\n\n📺 https://twitch.tv/ImpurestClub'
+        }]
+
+        return winnersHandles.concat(losersHandles);
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    case 'top-4':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
+        var winnersFinal =  findMatchesInRound(matches, winnersFinalsRound);
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], winnersFinal);
+        return [{
+          'message': "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub"
+        }]
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    case 'losers-semis':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
+        var losersSemi = findMatchesInRound(matches, losersSemiRound);
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersSemi);
+        return [{
+          'message': "⏬ Losers Semifinals ⏬\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    case 'losers-finals':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
+        var losersFinal =  findMatchesInRound(matches, losersFinalsRound);
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], losersFinal);
+        return [{
+          'message': "⚠️ Losers Finals ⚠️\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    case 'grand-finals':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
+        var grandFinals =  findMatchesInRound(matches, grandFinalsRound);
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinals);
+        return [{
+          'message': "🚨 GRAND FINALS! 🚨\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    case 'reset':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var grandFinalsResetRound = parseInt(matches[matches.length-1]['match']['round']);
+        var grandFinalsReset =  findMatchesInRound(matches, grandFinalsResetRound);
+        var handles = await getTwitterHandles(body['service'], body['organization'], body['tournament_slug'], grandFinalsReset);
+        return [{
+          'message': "WE HAVE A RESET!\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
+        }]
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    case 'results':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        return [{
+          'error': '⚠️ This command only works if the bracket is COMPLETED.'
+        }];
+      } else {
+        var finalResults = await getFinalResults(body['service'], body['organization'], body['tournament_slug'])
+        return [{
+          'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
+        }];
+      }
+      break;
+
+    case 'populate-top-8':
+      if (await isTournamentInProgress(body['service'], body['organization'], body['tournament_slug'])) {
+        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2
+        var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
+        var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
+
+        var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
+        var losersQuarterRound = parseInt(matches[matches.length-5]['match']['round']);
+        var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
+        var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
+
+        var winnersTop8 = findMatchesInRound(matches, winnersRound);
+        var winnersFinals = findMatchesInRound(matches, winnersFinalsRound);
+        var grandFinals = findMatchesInRound(matches, grandFinalsRound);
+
+        var losersTop8 = findMatchesInRound(matches, losersRound);
+        var losersQuarters = findMatchesInRound(matches, losersQuarterRound);
+        var losersSemis = findMatchesInRound(matches, losersSemiRound);
+        var losersFinals = findMatchesInRound(matches, losersFinalsRound);
+
+        let winners = winnersTop8.concat(winnersFinals, grandFinals)
+        let losers = losersTop8.concat(losersQuarters, losersSemis, losersFinals)
+
+        var winnersHandles = await getUsernamesAndScores(body['service'], body['organization'], body['tournament_slug'], winners);
+        var losersHandles = await getUsernamesAndScores(body['service'], body['organization'], body['tournament_slug'], losers);
+
+        return [{
+          'matches': [
+            {
+              'winners': winnersHandles
+            },
+            {
+              'losers': losersHandles
+            }
+          ]
+        }];
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+        }];
+      }
+      break;
+    default:
+  }
+}
+
+async function parseMatchesStart(matches, body) {
+  console.log('START GG');
   console.log(body.button);
   switch (body.button) {
     case 'starting-soon':
@@ -236,18 +414,17 @@ function findMatchesInRound (matches, round) {
 }
 
 async function isTournamentInProgress(service, organization, tournament) {
-  // Will eventually use the below to support Smash.gg
-  // if (service === 'challonge') {
-  // }
-  console.log('Checking Tournament Status . . .');
-  const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '.json?api_key=' + process.env.CHALLONGE_API_KEY);
-  var tournamentDictionary = response.data['tournament'];
-  gameName = tournamentDictionary['game_name']; //Yes this is a janky place to set the game name.
-  tournamentName = tournamentDictionary['name'];
-  console.log(tournamentDictionary['state']);
-  if (tournamentDictionary['state'] === 'complete' || tournamentDictionary['state'] === 'pending') {
-    return false;
-  } else {return true;}
+  if (service === 'challonge') {
+    console.log('Checking Tournament Status . . .');
+    const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '.json?api_key=' + process.env.CHALLONGE_API_KEY);
+    var tournamentDictionary = response.data['tournament'];
+    gameName = tournamentDictionary['game_name']; //Yes this is a janky place to set the game name.
+    tournamentName = tournamentDictionary['name'];
+    console.log(tournamentDictionary['state']);
+    if (tournamentDictionary['state'] === 'complete' || tournamentDictionary['state'] === 'pending') {
+      return false;
+    } else {return true;}
+  }
 }
 
 async function getTwitterHandles(service, organization, tournament, matches) {
