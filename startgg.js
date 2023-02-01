@@ -369,7 +369,7 @@ async function formatTop4String(sets, eventID, gameName) {
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['fullRoundText'] === 'Winners Final') {
-      console.log('SET ' + set);
+      console.log('SET ' + JSON.stringify(set));
       let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
       let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
       handles.push(p1Handle);
