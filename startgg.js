@@ -24,7 +24,7 @@ const getEventInfo = async function(slug) {
           }
         }
       }`,
-        variables: {"slug":"wasd-live-13"}
+        variables: {"slug":slug}
       });
       
       var config = {
