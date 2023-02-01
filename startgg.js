@@ -88,7 +88,9 @@ const getGameTournamentNameAndID = async function(slug, url) {
 
 function compareGameStrings(url, gameName) {
     let gameString = extractGame(url);
-    let escapedGameName = gameName.replace(' ', '-').replace(':', '-').replace('[', '-').replace(']', '-');
+    let escapedGameName = gameName.replace(' ', '-');
+    console.log(escapedGameName);
+    escapedGameName.replace(':', '-').replace('[', '-').replace(']', '-')
 
     console.log(gameName);
     console.log(gameString.toUpperCase());
