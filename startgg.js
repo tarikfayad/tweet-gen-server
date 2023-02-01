@@ -335,9 +335,13 @@ function getStatusWithID(id, eventArray) {
   let status;
   eventArray.forEach(event => {
     console.log(event);
-      if(id === event.id) status = event.state;
+      if(id === event.id) {
+        status = event.state;
+        console.log(status);
+      }
   });
 
+  console.log(status);
   return status;
 }
 
