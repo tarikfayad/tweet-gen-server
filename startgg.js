@@ -28,8 +28,6 @@ const getEventInfo = async function(slug) {
       });
       
       var config = {
-        method: 'post',
-        url: process.env.START_GG_BASE_URL,
         headers: { 
           'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
           'Content-Type': 'application/json'
@@ -38,7 +36,7 @@ const getEventInfo = async function(slug) {
       };
 
       let axiosAPI = axios.create(config);
-      return await axiosAPI.post();
+      return await axiosAPI.post(process.env.START_GG_BASE_URL);
 }
 
 
