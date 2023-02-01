@@ -332,11 +332,11 @@ function getNumEntrants(id, eventArray) {
 }
 
 function getStatusWithID(id, eventArray) {
-  let status;
+  let status = '';
   eventArray.forEach(event => {
     console.log(event);
       if(id === event.id) {
-        status = event.state;
+        status = event['state'];
         console.log(status);
       }
   });
