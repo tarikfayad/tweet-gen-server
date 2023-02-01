@@ -1,4 +1,13 @@
 require('dotenv').config();
+const axios = require('axios');
+
+const axiosAPI = axios.create({
+    baseURL: process.env.CHALLONGE_BASE_URL
+  });
+
+const getMatches = async function() {
+    return await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
+}
 
 const getGameAndTournamentName = async function(organization, tournament){
     const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '.json?api_key=' + process.env.CHALLONGE_API_KEY);
@@ -237,5 +246,5 @@ function compareResults(player1, player2) {
 }
 
 module.exports = {
-    getGameAndTournamentName, isTournamentInProgress, getTwitterHandles, getUsernamesAndScores, getFinalResults
+    getGameAndTournamentName, isTournamentInProgress, getTwitterHandles, getUsernamesAndScores, getFinalResults, getMatches
 }

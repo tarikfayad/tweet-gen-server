@@ -2,15 +2,10 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = require('express')();
-const axios = require('axios');
 const challonge = require('./challonge.js');
 
 let gameName = '';
 let tournamentName = '';
-
-const axiosAPI = axios.create({
-  baseURL: process.env.CHALLONGE_BASE_URL
-});
 
 // Rest API Methods. These are the endpoints that the Svelte app will hit.
 app.use(bodyParser.json());
@@ -19,7 +14,7 @@ app.use(cors());
 app.post('/tweet-gen', async (req, res) => {
   try {
     if(req.body['service']==='challonge') {
-      const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
+      const response = await challonge.getMatches();
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
 
