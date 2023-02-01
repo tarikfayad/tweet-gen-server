@@ -336,7 +336,7 @@ function getStatusWithID(id, eventArray) {
   eventArray.forEach(event => {
     console.log(event);
       if(id === event.id) {
-        status = event['state'];
+        status = JSON.stringify(event)['state'];
         console.log(event.state)
         console.log(status);
       }
