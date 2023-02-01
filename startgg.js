@@ -229,7 +229,7 @@ function getNumEntrants(id, eventArray) {
 
 function compareGameStrings(url, gameName) {
     let gameString = extractGame(url);
-    let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-');
+    let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
 
     console.log(gameString);
     console.log(escapedGameName);
