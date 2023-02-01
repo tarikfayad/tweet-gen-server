@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post('/tweet-gen', async (req, res) => {
+  console.log('service: ' + req.body['service'])
   try {
     if(req.body['service']==='challonge') {
       const response = await challonge.getMatches(req);
