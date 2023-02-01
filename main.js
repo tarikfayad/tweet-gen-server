@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = require('express')();
 const challonge = require('./challonge.js');
+const startgg = require('./startgg.js');
 
 let gameName = '';
 let tournamentName = '';
@@ -17,7 +18,9 @@ app.post('/tweet-gen', async (req, res) => {
       const response = await challonge.getMatches(req);
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
-
+      console.log("START GG");
+      let response = startgg.getEventInfo('wasd-live-13');
+      console.log(response);
     }
   } catch (e) {
     console.log(e);
