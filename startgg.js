@@ -128,7 +128,7 @@ const getFinalResults = async function(slug, eventID) {
   let standings = getStandingsWithID(eventID, response.data['data']['tournament']['events']);
   let numEntrants = getNumEntrants(eventID, response.data['data']['tournament']['events']);
 
-  return await formatResultsString(standings, numEntrants);
+  return await formatResultsString(standings, numEntrants, eventID);
 }
 
 const getPlayerTwitterHandle = async function(playerHandle, eventID){
