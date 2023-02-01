@@ -65,7 +65,7 @@ const getGameTournamentNameAndID = async function(slug, url) {
       let axiosAPI = axios.create(config);
       let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
 
-      console.log('getGameTournamentNameAndID: ' + response.data);
+      console.log('getGameTournamentNameAndID: ' + JSON.stringify(response.data));
 
       let tournamentName = response.data['data']['tournament']['name'];
       let eventID, gameName;
