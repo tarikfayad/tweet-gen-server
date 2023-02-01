@@ -19,7 +19,6 @@ app.post('/tweet-gen', async (req, res) => {
       const response = await challonge.getMatches(req);
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
-      console.log(req.body);
       
       console.log('STARTGG RESPONSE: ' + await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket));
     }

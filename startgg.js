@@ -71,21 +71,23 @@ const getGameTournamentNameAndID = async function(slug, url) {
       let eventID, gameName;
 
       let eventArray = response.data['data']['tournament']['events'];
+      let information;
       eventArray.forEach(event => {
 
         if(compareGameStrings(url, event.videogame.displayName)) {
             eventID = event.id;
             gameName = event.videogame.displayName;
 
-            let response = {
+            information = {
                 'game': gameName,
                 'tournament': tournamentName,
                 'id': eventID
             }
-            console.log(response);
-            return response;
         }
       });
+      
+    console.log(information)
+    return information;
 }
 
 function compareGameStrings(url, gameName) {
