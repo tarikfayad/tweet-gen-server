@@ -20,7 +20,7 @@ app.post('/tweet-gen', async (req, res) => {
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
       console.log("START GG");
-      let response = await startgg.getEventInfo('wasd-live-13');
+      let response = await startgg.getEventInfo(req.body.tournament_slug);
       console.log(JSON.stringify(response.data));
     }
   } catch (e) {
