@@ -265,7 +265,7 @@ async function parseStartGGMatches(body) {
       }];
       break;
     case 'kickoff':
-      startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
       gameName = startGGNames["gameName"];
       tournamentName = startGGNames["tournamentName"];
       startGGID = startGGNames["id"];
@@ -274,7 +274,7 @@ async function parseStartGGMatches(body) {
       }];
       break;
     case 'top-16':
-      startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
       gameName = startGGNames["gameName"];
       tournamentName = startGGNames["tournamentName"];
       startGGID = startGGNames["id"];
@@ -284,7 +284,7 @@ async function parseStartGGMatches(body) {
       break;
     case 'top-8':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
@@ -306,7 +306,7 @@ async function parseStartGGMatches(body) {
       break;
     case 'top-4':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
@@ -324,7 +324,7 @@ async function parseStartGGMatches(body) {
       break;
     case 'losers-semis':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
@@ -342,7 +342,7 @@ async function parseStartGGMatches(body) {
       break;
     case 'losers-finals':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
@@ -360,7 +360,7 @@ async function parseStartGGMatches(body) {
       break;
     case 'grand-finals':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
@@ -378,7 +378,7 @@ async function parseStartGGMatches(body) {
       break;
     case 'reset':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
@@ -395,7 +395,7 @@ async function parseStartGGMatches(body) {
       }
       break;
     case 'results':
-      startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
       gameName = startGGNames["gameName"];
       tournamentName = startGGNames["tournamentName"];
       startGGID = startGGNames["id"];
@@ -407,7 +407,7 @@ async function parseStartGGMatches(body) {
 
     case 'populate-top-8':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
         gameName = startGGNames["gameName"];
         tournamentName = startGGNames["tournamentName"];
         startGGID = startGGNames["id"];
