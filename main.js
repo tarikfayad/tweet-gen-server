@@ -288,6 +288,7 @@ async function parseStartGGMatches(body) {
       tournamentName = startGGNames["tournamentName"];
       startGGID = startGGNames["id"];
       status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
+      console.log('STATUS ' + status);
       if (status === 'ACTIVE') {
         return await startgg.getTop8(body['tournament_slug'], startGGID);
       } else {
