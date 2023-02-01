@@ -284,6 +284,7 @@ async function formatTop8String(sets, eventID) {
   let losersRound;
   let winners = [];
   let losers = [];
+  let losersRoundSet = false;
 
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
@@ -295,7 +296,10 @@ async function formatTop8String(sets, eventID) {
       handles.push(p2Handle);
       winners.push(handles);
     } else if (set['fullRoundText'] === 'Losers Quarter-Final') {
-      losersRound = set['round'] + 1;
+      if(!losersRoundSet) {
+        losersRound = set['round'] + 1;
+        losersRoundSet = true;
+      }
     }
   }
 
