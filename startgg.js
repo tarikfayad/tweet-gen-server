@@ -350,6 +350,7 @@ async function formatTop8String(sets, eventID) {
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['round'] === losersRound) {
+      console.log('SET ' + JSON.stringify(set));
       let handles = [];
       let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
       let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
