@@ -65,7 +65,7 @@ const getGameTournamentNameAndID = async function(slug, url) {
       let axiosAPI = axios.create(config);
       let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
 
-      console.log(response.data);
+      console.log('getGameTournamentNameAndID: ' + response.data);
 
       let tournamentName = response.data['data']['tournament']['name'];
       let eventID, gameName;
@@ -173,7 +173,6 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
 
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  console.log('LOGGING ' + JSON.stringify(response.data));
   let authorizations = response.data['data']['event']['entrants']['nodes'][0]['participants'][0]['player']['user']['authorizations'];
   let handle;
   authorizations.forEach(authorization => {
