@@ -91,51 +91,140 @@ const getGameTournamentNameAndID = async function(slug, url) {
 }
 
 const getFinalResults = async function(slug, eventID) {
-    var data = JSON.stringify({
-        query: `query TournamentQuery($slug: String) {
-            tournament(slug: $slug) {
-              events {
-                id
-                name
-                standings(query: {
-                perPage: 8,
-                page: 1
-              }){
-                nodes {
-                  placement
-                  entrant {
-                    id
-                    name
+  var data = JSON.stringify({
+      query: `query TournamentQuery($slug: String) {
+          tournament(slug: $slug) {
+            events {
+              id
+              name
+              numEntrants
+              standings(query: {
+              perPage: 8,
+              page: 1
+            }){
+              nodes {
+                placement
+                entrant {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }`,
+    variables: {"slug":slug}
+  });
+      
+  var config = {
+      headers: { 
+        'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+        'Content-Type': 'application/json'
+      }
+  };
+
+  let axiosAPI = axios.create(config);
+  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  let standings = getStandingsWithID(eventID, response.data['data']['tournament']['events']);
+  let numEntrants = getNumEntrants(eventID, response.data['data']['tournament']['events']);
+
+  return await formatResultsString(standings, numEntrants);
+}
+
+const getPlayerTwitterHandle = async function(playerHandle, eventID){
+  var data = JSON.stringify({
+    query: `query TournamentQuery($eventID: ID!, $playerHandle: String) {
+      event(id: $eventID) {
+          id
+          name
+          entrants (query: {perPage: 1, filter:{
+            name: $playerHandle
+          }}) {
+            nodes {
+              participants {
+                player {
+                  id
+                  prefix
+                  gamerTag
+                  user {
+                    authorizations {
+                      type
+                      externalUsername
+                    }
                   }
                 }
               }
-              }
             }
-          }`,
-        variables: {"slug":slug}
-      });
-      
-      var config = {
-        headers: { 
-          'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-          'Content-Type': 'application/json'
-        }
-      };
+          }
+      }
+    }`,
+    variables: {
+      "eventID":eventID,
+      "playerHandle": playerHandle
+  }
+  });
+  
+  var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+  };
 
-      let axiosAPI = axios.create(config);
-      let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-      let standings = getStandingsWithID(eventID, response.data['data']['tournament']['events']);
+  let axiosAPI = axios.create(config);
+  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  let authorizations = response.data['data']['event']['entrants']['nodes'][0]['participants'][0]['player']['user']['authorizations'];
+  let handle;
+  authorizations.forEach(authorization => {
+    if(authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
+  });
+
+  return handle;
 }
 
+// String Formatting Methods
+async function formatResultsString(standings, numEntrants, eventID) {
+  console.log('Getting Tournament Results . . .');
+
+  let results = '';
+  let topThree = ['🏆', '🥈', '🥉'];
+
+  // Return top 3 if there are less than 16 entries
+  if(numEntrants < 16) {
+    for (var i = 0; i < 3; i++) {
+      let participant = standings[i];
+      let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
+      results = results + topThree[i] + ' ' + '@' + handle + '\n';
+    }
+  } else {
+    for (var i = 0; i < 8; i++) {
+      let participant = standings[i];
+      let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
+      let placement = participant['placement'].toString();
+      results = results + placement + '. ' + '@' + handle + '\n';
+    }
+  }
+
+  return results;
+}
 
 // Helper Methods
 function getStandingsWithID(id, eventArray) {
-    let standings;
-    eventArray.forEach(event => {
-        if(id === event.id) standings = event.standings;
-    });
+  let standings;
+  eventArray.forEach(event => {
+      if(id === event.id) standings = event.standings.nodes;
+  });
 
-    return standings;
+  return standings;
+}
+
+function getNumEntrants(id, eventArray) {
+  let entrants;
+  eventArray.forEach(event => {
+      if(id === event.id) entrants = event.numEntrants;
+  });
+
+  return entrants;
 }
 
 function compareGameStrings(url, gameName) {
@@ -153,5 +242,5 @@ function extractGame (url) {
 }
 
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID
+    getEventInfo, getGameTournamentNameAndID, getFinalResults
 }
