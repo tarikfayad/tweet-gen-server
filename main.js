@@ -64,6 +64,7 @@ app.listen(port, () => console.log(`Tweet app backend is running on port ${port}
 async function parseChallongeMatches(matches, body) {
   console.log('BUTTON:');
   console.log(body.button);
+  let challongeNames;
   switch (body.button) {
     case 'starting-soon':
       return [{
@@ -71,19 +72,26 @@ async function parseChallongeMatches(matches, body) {
       }];
       break;
     case 'kickoff':
-      await challonge.isTournamentInProgress(body['organization'], body['tournament_slug']);
+      challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+      gameName = challongeNames["gameName"];
+      tournamentName = challongeNames["tournamentNames"];
       return [{
         'message': "Aaaand we're live with " + tournamentName + "!\n\n🎙️ @" + body.com1.replace("@", "") + " & @" + body.com2.replace("@", "") + "\n⚔️ " + body.bracket + "\n\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
       }];
       break;
     case 'top-16':
-      await challonge.isTournamentInProgress(body['organization'], body['tournament_slug']);
+      challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+      gameName = challongeNames["gameName"];
+      tournamentName = challongeNames["tournamentNames"];
       return [{
         'message': "Top 16 is decided!\n\nStop by the stream and place your bets:\n\n⚔️ " + body.bracket + "\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
       }];
       break;
     case 'top-8':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
         var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
         var winners = findMatchesInRound(matches, winnersRound);
@@ -93,9 +101,7 @@ async function parseChallongeMatches(matches, body) {
 
         return [{
           'message': '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winnersHandles[0]['player1'] + ' vs ' + winnersHandles[0]['player2'] + '\n' + winnersHandles[1]['player1'] + ' vs ' + winnersHandles[1]['player2'] + '\n\nl:\n' + losersHandles[0]['player1'] + ' vs ' + losersHandles[0]['player2'] + '\n' + losersHandles[1]['player1'] + ' vs ' + losersHandles[1]['player2'] +'\n\n📺 https://twitch.tv/ImpurestClub'
-        }]
-
-        return winnersHandles.concat(losersHandles);
+        }];
       } else {
         return [{
           'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
@@ -104,6 +110,9 @@ async function parseChallongeMatches(matches, body) {
       break;
     case 'top-4':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
         var winnersFinal =  findMatchesInRound(matches, winnersFinalsRound);
         var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], winnersFinal);
@@ -118,6 +127,9 @@ async function parseChallongeMatches(matches, body) {
       break;
     case 'losers-semis':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
         var losersSemi = findMatchesInRound(matches, losersSemiRound);
         var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], losersSemi);
@@ -132,6 +144,9 @@ async function parseChallongeMatches(matches, body) {
       break;
     case 'losers-finals':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
         var losersFinal =  findMatchesInRound(matches, losersFinalsRound);
         var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], losersFinal);
@@ -146,6 +161,9 @@ async function parseChallongeMatches(matches, body) {
       break;
     case 'grand-finals':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
         var grandFinals =  findMatchesInRound(matches, grandFinalsRound);
         var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], grandFinals);
@@ -160,6 +178,9 @@ async function parseChallongeMatches(matches, body) {
       break;
     case 'reset':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         var grandFinalsResetRound = parseInt(matches[matches.length-1]['match']['round']);
         var grandFinalsReset =  findMatchesInRound(matches, grandFinalsResetRound);
         var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], grandFinalsReset);
@@ -179,6 +200,9 @@ async function parseChallongeMatches(matches, body) {
         }];
       } else {
         var finalResults = await challonge.getFinalResults(body['organization'], body['tournament_slug'])
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
         return [{
           'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
         }];
@@ -187,6 +211,10 @@ async function parseChallongeMatches(matches, body) {
 
     case 'populate-top-8':
       if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+        challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
+        gameName = challongeNames["gameName"];
+        tournamentName = challongeNames["tournamentNames"];
+        
         var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2
         var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
         var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);

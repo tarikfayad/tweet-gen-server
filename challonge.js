@@ -1,12 +1,19 @@
 require('dotenv').config();
 
 module.exports = function(){
+    this.getGameAndTournamentName = async function(organization, tournament){
+        const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '.json?api_key=' + process.env.CHALLONGE_API_KEY);
+        var tournamentDictionary = response.data['tournament'];
+        return {
+            "gameName": tournamentDictionary['game_name'],
+            "tournamentName": tournamentDictionary['name']
+        }
+    }
+
     this.isTournamentInProgress = async function(organization, tournament) {
         console.log('Checking Tournament Status . . .');
         const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '.json?api_key=' + process.env.CHALLONGE_API_KEY);
         var tournamentDictionary = response.data['tournament'];
-        gameName = tournamentDictionary['game_name']; //Yes this is a janky place to set the game name.
-        tournamentName = tournamentDictionary['name'];
         console.log(tournamentDictionary['state']);
         if (tournamentDictionary['state'] === 'complete' || tournamentDictionary['state'] === 'pending') {
         return false;
