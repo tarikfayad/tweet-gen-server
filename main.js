@@ -257,7 +257,7 @@ async function parseChallongeMatches(matches, body) {
 async function parseStartGGMatches(body) {
   console.log('BUTTON:');
   console.log(body.button);
-  let startGGNames;
+  let startGGNames, status;
   switch (body.button) {
     case 'starting-soon':
       return [{
@@ -283,24 +283,16 @@ async function parseStartGGMatches(body) {
       }];
       break;
     case 'top-8':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2;
-        var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
-        var winners = findMatchesInRound(matches, winnersRound);
-        var winnersHandles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], winners);
-        var losers = findMatchesInRound(matches, losersRound);
-        var losersHandles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], losers);
-
-        return [{
-          'message': '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winnersHandles[0]['player1'] + ' vs ' + winnersHandles[0]['player2'] + '\n' + winnersHandles[1]['player1'] + ' vs ' + winnersHandles[1]['player2'] + '\n\nl:\n' + losersHandles[0]['player1'] + ' vs ' + losersHandles[0]['player2'] + '\n' + losersHandles[1]['player1'] + ' vs ' + losersHandles[1]['player2'] +'\n\n📺 https://twitch.tv/ImpurestClub'
-        }];
+      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
+      gameName = startGGNames["gameName"];
+      tournamentName = startGGNames["tournamentName"];
+      startGGID = startGGNames["id"];
+      status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
+      if (status === 'ACTIVE') {
+        return await startgg.getTop8(body['tournament_slug'], startGGID);
       } else {
         return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+          'error': '⚠️ This command only works if the bracket is ACTIVE.'
         }];
       }
       break;
@@ -399,10 +391,17 @@ async function parseStartGGMatches(body) {
       gameName = startGGNames["gameName"];
       tournamentName = startGGNames["tournamentName"];
       startGGID = startGGNames["id"];
-      var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
+      status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
+      if (status === 'COMPLETED') {
+        var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
       return [{
         'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
       }];
+      } else {
+        return [{
+          'error': '⚠️ This command only works if the bracket is COMPLETED.'
+        }];
+      }
       break;
 
     case 'populate-top-8':
