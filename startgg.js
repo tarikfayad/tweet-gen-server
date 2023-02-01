@@ -185,6 +185,9 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
 // String Formatting Methods
 async function formatResultsString(standings, numEntrants, eventID) {
   console.log('Getting Tournament Results . . .');
+  console.log(standings);
+  console.log(numEntrants);
+  console.log(eventID);
 
   let results = '';
   let topThree = ['🏆', '🥈', '🥉'];
@@ -242,8 +245,6 @@ function compareGameStrings(url, gameName) {
 
 function extractGame (url) {
     var pathArray = url.split( '/' );
-    console.log('path array: ' + pathArray[6]);
-    console.log('path array: ' + pathArray);
     return pathArray[6].replace('singles', '');
 }
 
