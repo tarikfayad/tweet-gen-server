@@ -90,6 +90,7 @@ function compareGameStrings(url, gameName) {
     let gameString = extractGame(url);
     let escapedGameName = gameName.replace(' ', '-').replace(':', '-').replace('[', '-').replace(']', '-');
 
+    console.log(gameName);
     console.log(gameString.toUpperCase());
     console.log(escapedGameName.toUpperCase());
 
