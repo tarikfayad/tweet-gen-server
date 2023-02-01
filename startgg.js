@@ -173,6 +173,7 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
 
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  console.log('LOGGING ' + response.data['data']);
   let authorizations = response.data['data']['event']['entrants']['nodes'][0]['participants'][0]['player']['user']['authorizations'];
   let handle;
   authorizations.forEach(authorization => {
