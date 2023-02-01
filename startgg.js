@@ -74,6 +74,8 @@ const getGameTournamentNameAndID = async function(slug, url) {
       let eventArray = response.data['data']['tournament']['events'];
       eventArray.forEach(event => {
         gameName = event.videogame.displayName;
+        console.log(gameString.toUpperCase());
+        console.log(gameName.toUpperCase());
 
         if(gameName.toUpperCase() === gameString.toUpperCase()) {
             eventID = event.id;
