@@ -68,10 +68,10 @@ const getGameTournamentNameAndID = async function(slug, url) {
 
       console.log(response.data);
 
-      let tournamentName = response.data.tournament.name;
+      let tournamentName = response.data.data.tournament.name;
       let eventID, gameName;
 
-      let eventArray = response.data.tournament.events;
+      let eventArray = response.data.data.tournament.events;
       eventArray.forEach(event => {
         gameName = event.videogame.displayName;
 
