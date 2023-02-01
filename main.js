@@ -14,7 +14,7 @@ app.use(cors());
 app.post('/tweet-gen', async (req, res) => {
   try {
     if(req.body['service']==='challonge') {
-      const response = await challonge.getMatches();
+      const response = await challonge.getMatches(req);
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
 

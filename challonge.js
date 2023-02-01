@@ -5,7 +5,7 @@ const axiosAPI = axios.create({
     baseURL: process.env.CHALLONGE_BASE_URL
   });
 
-const getMatches = async function() {
+const getMatches = async function(req) {
     return await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
 }
 
