@@ -487,7 +487,7 @@ async function formatResultsString(standings, numEntrants, eventID) {
       let participant = standings[i];
       let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
       let placement = participant['placement'].toString();
-      results = results + placement + '. ' + '@' + handle + '\n';
+      results = results + placement + '. ' + handle + '\n';
     }
   }
 
@@ -682,14 +682,17 @@ function extractGame (url) {
 
 function getHashtags(game) {
   switch (game) {
-    case 'Granblue Fantasy Versus':
+    case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy'
       break;
     case 'Under Night In-Birth Exe:Late[cl-r]':
       return '#UNICLR #inbirth'
       break;
-    case 'Guilty Gear -Strive-':
+    case 'Guilty Gear: Strive':
       return '#GGST #GuiltyGear'
+      break;
+    case 'Guilty Gear Xrd REV2':
+      return '#GGXRD #GuiltyGear'
       break;
     case 'Melty Blood: Type Lumina':
       return '#MBTL #MBTL_Tournament'
