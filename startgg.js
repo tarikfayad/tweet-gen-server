@@ -369,15 +369,14 @@ async function formatTop4String(sets, eventID, gameName) {
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['fullRoundText'] === 'Winners Final') {
-      console.log('SET ' + JSON.stringify(set));
       let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
       let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      console.log(p1Handle);
-      console.log(p2Handle);
       handles.push(p1Handle);
       handles.push(p2Handle);
     }
   }
+
+  console.log(handles);
 
   return "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0][1] + " vs " + handles[0][1] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub";
 }
