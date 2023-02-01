@@ -284,7 +284,7 @@ async function formatTop8String(sets, eventID) {
   let losersRound;
   let winners, losers = [];
 
-  for (var i = 0; i < sets.length(); i++) {
+  for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['fullRoundText'] === 'Winners Semi-Final') {
       let handles = [];
@@ -298,7 +298,7 @@ async function formatTop8String(sets, eventID) {
     }
   }
 
-  for (var i = 0; i < sets.length(); i++) {
+  for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['round'] === losersRound) {
       let handles = [];
