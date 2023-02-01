@@ -21,7 +21,7 @@ app.post('/tweet-gen', async (req, res) => {
     } else if(req.body['service']==='start') {
       console.log(req.body);
       let response = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
-      console.log(JSON.stringify(response.data));
+      console.log(JSON.stringify(response));
     }
   } catch (e) {
     console.log(e);
