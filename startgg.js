@@ -337,6 +337,7 @@ function getStatusWithID(id, eventArray) {
     console.log(event);
       if(id === event.id) {
         status = event['state'];
+        console.log(event.state)
         console.log(status);
       }
   });
