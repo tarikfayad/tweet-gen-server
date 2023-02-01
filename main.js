@@ -395,20 +395,14 @@ async function parseStartGGMatches(body) {
       }
       break;
     case 'results':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        return [{
-          'error': '⚠️ This command only works if the bracket is COMPLETED.'
-        }];
-      } else {
-        startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
-        return [{
-          'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
-        }];
-      }
+      startGGNames = await startgg.getGameTournamentNameAndID(req.body.tournament_slug, req.body.bracket);
+      gameName = startGGNames["gameName"];
+      tournamentName = startGGNames["tournamentName"];
+      startGGID = startGGNames["id"];
+      var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
+      return [{
+        'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
+      }];
       break;
 
     case 'populate-top-8':
