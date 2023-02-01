@@ -28,15 +28,22 @@ const getEventInfo = async function(slug) {
       });
       
       var config = {
+        method: 'post',
+        url: 'https://api.start.gg/gql/alpha',
         headers: { 
-          'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+          'Authorization': 'Bearer 37a84f71e54888c19a2b497eb0d5a4a7', 
           'Content-Type': 'application/json'
         },
         data : data
       };
-
-      let axiosAPI = axios.create(config);
-      return await axiosAPI.post(process.env.START_GG_BASE_URL);
+      
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 }
 
 
