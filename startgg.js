@@ -76,6 +76,8 @@ const getGameTournamentNameAndID = async function(slug, url) {
         if(compareGameStrings(url, event.videogame.displayName)) {
             eventID = event.id;
             gameName = event.videogame.displayName;
+
+            console.log('TRUE');
             
             return {
                 'game': gameName,
@@ -89,10 +91,6 @@ const getGameTournamentNameAndID = async function(slug, url) {
 function compareGameStrings(url, gameName) {
     let gameString = extractGame(url);
     let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-');
-
-    console.log(gameName)
-    console.log(gameString.toUpperCase());
-    console.log(escapedGameName.toUpperCase());
 
     if(gameString.toUpperCase() === escapedGameName.toUpperCase()) return true;
     else return false;
