@@ -299,20 +299,18 @@ async function parseStartGGMatches(body) {
       }
       break;
     case 'top-4':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
-        var winnersFinal =  findMatchesInRound(matches, winnersFinalsRound);
-        var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], winnersFinal);
+      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
+      gameName = startGGNames["gameName"];
+      tournamentName = startGGNames["tournamentName"];
+      startGGID = startGGNames["id"];
+      status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
+      if (status === 'ACTIVE') {
         return [{
-          'message': "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub"
-        }]
+          'message': await startgg.getTop4(body['tournament_slug'], startGGID, gameName)
+      }]
       } else {
         return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+          'error': '⚠️ This command only works if the bracket is ACTIVE.'
         }];
       }
       break;

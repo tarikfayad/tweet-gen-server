@@ -133,6 +133,49 @@ let sets = getSetsWithID(eventID, response.data['data']['tournament']['events'])
 return await formatTop8String(sets, eventID);
 }
 
+const getTop4 =  async function(slug, eventID, gameName) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
+      tournament(slug: $slug) {
+        events {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+  variables: {"slug":slug}
+});
+    
+var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+};
+
+let axiosAPI = axios.create(config);
+let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+return await formatTop4String(sets, eventID, gameName);
+}
+
 const getFinalResults = async function(slug, eventID) {
   var data = JSON.stringify({
       query: `query TournamentQuery($slug: String) {
@@ -280,7 +323,7 @@ async function formatResultsString(standings, numEntrants, eventID) {
 }
 
 async function formatTop8String(sets, eventID) {
-  console.log('Getting Tournament Top 8 . . .');
+  console.log('Getting Tournament Top 8 from Startgg. . .');
 
   let losersRound;
   let winners = [];
@@ -316,7 +359,24 @@ async function formatTop8String(sets, eventID) {
     }
   }
 
-  return '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nl:\n' + losers[0][0] + ' vs ' + losers[0][0] + '\n' + losers[1][0] + ' vs ' + losers[1][1] +'\n\n📺 https://twitch.tv/ImpurestClub';
+  return '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nl:\n' + losers[0][0] + ' vs ' + losers[0][1] + '\n' + losers[1][0] + ' vs ' + losers[1][1] +'\n\n📺 https://twitch.tv/ImpurestClub';
+}
+
+async function formatTop4String(sets, eventID, gameName) {
+  console.log('Getting Winners Finals from Startgg . . .');
+
+  let handles = [];
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Winners Final') {
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+    }
+  }
+
+  return "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0][1] + " vs " + handles[0][1] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub";
 }
 
 // Helper Methods
@@ -370,6 +430,36 @@ function extractGame (url) {
     return pathArray[6].replace('singles', '');
 }
 
+function getHashtags(game) {
+  switch (game) {
+    case 'Granblue Fantasy Versus':
+      return '#GBVS #GranblueFantasy'
+      break;
+    case 'Under Night In-Birth Exe:Late[cl-r]':
+      return '#UNICLR #inbirth'
+      break;
+    case 'Guilty Gear -Strive-':
+      return '#GGST #GuiltyGear'
+      break;
+    case 'Melty Blood: Type Lumina':
+      return '#MBTL #MBTL_Tournament'
+      break;
+    case 'BlazBlue: Central Fiction':
+      return '#BBCF #BlazBlue'
+      break;
+    case 'Guilty Gear XX Accent Core':
+      return '#GGACPR #GuiltyGear'
+      break;
+    case 'DNF Duel':
+      return '#DNF #DNFDuel'
+      break;
+    case 'Persona 4 Arena Ultimax':
+      return '#P4AU #Persona'
+      break;
+    default:
+  }
+}
+
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8
+    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop4
 }
