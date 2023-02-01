@@ -64,7 +64,6 @@ const getGameTournamentNameAndID = async function(slug, url) {
 
       let axiosAPI = axios.create(config);
       let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-      let gameString = extractGame(url);
 
       console.log(response.data);
 
@@ -73,12 +72,10 @@ const getGameTournamentNameAndID = async function(slug, url) {
 
       let eventArray = response.data['data']['tournament']['events'];
       eventArray.forEach(event => {
-        gameName = event.videogame.displayName;
-        console.log(gameString.toUpperCase());
-        console.log(gameName.toUpperCase());
 
-        if(gameName.toUpperCase() === gameString.toUpperCase()) {
+        if(compareGameStrings(url, event.videogame.displayName)) {
             eventID = event.id;
+            gameName = event.videogame.displayName;
             
             return {
                 'game': gameName,
@@ -89,9 +86,21 @@ const getGameTournamentNameAndID = async function(slug, url) {
       });
 }
 
+function compareGameStrings(url, gameName) {
+    let gameString = extractGame(url);
+    let escapedGameName = gameName.replace(' ', '-').replace(':', '-').replace('[', '-').replace(']', '-');
+
+    console.log(gameString);
+    console.log(escapedGameName);
+
+    if(gameString === escapedGameName) return true;
+    else return false;
+
+}
+
 function extractGame (url) {
     var pathArray = url.split( '/' );
-    return pathArray[6];
+    return pathArray[6].replace('Singles', '');
 }
 
 module.exports = {
