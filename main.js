@@ -20,6 +20,7 @@ app.post('/tweet-gen', async (req, res) => {
   try {
     if(req.body['service']==='challonge') {
       const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
+      console.log('RESPOSNE LOGGING');
       console.log(response.data);
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
