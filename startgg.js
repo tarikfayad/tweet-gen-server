@@ -350,7 +350,6 @@ async function formatTop8String(sets, eventID) {
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['round'] === losersRound) {
-      console.log('SET ' + JSON.stringify(set));
       let handles = [];
       let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
       let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
@@ -373,6 +372,8 @@ async function formatTop4String(sets, eventID, gameName) {
       console.log('SET ' + JSON.stringify(set));
       let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
       let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      console.log(p1Handle);
+      console.log(p2Handle);
       handles.push(p1Handle);
       handles.push(p2Handle);
     }
