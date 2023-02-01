@@ -93,14 +93,14 @@ function compareGameStrings(url, gameName) {
     console.log(gameString);
     console.log(escapedGameName);
 
-    if(gameString === escapedGameName) return true;
+    if(gameString.toUpperCase() === escapedGameName.toUpperCase()) return true;
     else return false;
 
 }
 
 function extractGame (url) {
     var pathArray = url.split( '/' );
-    return pathArray[6].replace('Singles', '');
+    return pathArray[6].replace('singles', '');
 }
 
 module.exports = {
