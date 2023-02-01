@@ -18,10 +18,13 @@ app.use(cors());
 
 app.post('/tweet-gen', async (req, res) => {
   try {
-    const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
-    console.log('RESPONSE: ');
-    console.log(req.body);
-    return res.status(200).json(await parseMatches(response.data, req.body));
+    if(req.body['service']==='challonge') {
+      const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
+      console.log(response.data);
+      return res.status(200).json(await parseChallongeMatches(response.data, req.body));
+    } else if(req.body['service']==='start') {
+
+    }
   } catch (e) {
     console.log(e);
   }
@@ -54,10 +57,10 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 5001
 app.listen(port, () => console.log(`Tweet app backend is running on port ${port}`))
 
-// Helper methods
+// CHALLONGE SWITCH STATEMENT
 //Yes I know it's a little messy to pass along all of these variables,
 //but it's the path of least resistance to make sure that the correct info get's spit out.
-async function parseMatches(matches, body) {
+async function parseChallongeMatches(matches, body) {
   console.log('BUTTON:');
   console.log(body.button);
   switch (body.button) {
@@ -227,6 +230,7 @@ async function parseMatches(matches, body) {
   }
 }
 
+// HELPER METHODS
 function findMatchesInRound (matches, round) {
   var foundMatches = [];
   matches.forEach((tourneyMatch, i) => {
