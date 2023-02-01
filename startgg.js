@@ -31,12 +31,11 @@ const getEventInfo = async function(slug) {
         headers: { 
           'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
           'Content-Type': 'application/json'
-        },
-        data : data
+        }
       };
 
       let axiosAPI = axios.create(config);
-      return await axiosAPI.post(process.env.START_GG_BASE_URL);
+      return await axiosAPI.post(process.env.START_GG_BASE_URL, data);
 }
 
 
