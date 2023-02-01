@@ -20,8 +20,6 @@ app.post('/tweet-gen', async (req, res) => {
   try {
     if(req.body['service']==='challonge') {
       const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
-      console.log('RESPOSNE LOGGING');
-      console.log(response.data);
       return res.status(200).json(await parseChallongeMatches(response.data, req.body));
     } else if(req.body['service']==='start') {
 
@@ -214,7 +212,7 @@ async function parseChallongeMatches(matches, body) {
         challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
         gameName = challongeNames["gameName"];
         tournamentName = challongeNames["tournamentNames"];
-        
+
         var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2
         var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
         var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
