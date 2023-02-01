@@ -77,13 +77,13 @@ const getGameTournamentNameAndID = async function(slug, url) {
             eventID = event.id;
             gameName = event.videogame.displayName;
 
-            console.log('TRUE');
-            
-            return {
+            let response = {
                 'game': gameName,
                 'tournament': tournamentName,
                 'id': eventID
             }
+            console.log(response);
+            return response;
         }
       });
 }
