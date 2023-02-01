@@ -257,7 +257,12 @@ async function parseChallongeMatches(matches, body) {
 async function parseStartGGMatches(body) {
   console.log('BUTTON:');
   console.log(body.button);
-  let startGGNames, status;
+  let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
+  let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
+  gameName = startGGNames["gameName"];
+  tournamentName = startGGNames["tournamentName"];
+  startGGID = startGGNames["id"];
+
   switch (body.button) {
     case 'starting-soon':
       return [{
@@ -265,29 +270,17 @@ async function parseStartGGMatches(body) {
       }];
       break;
     case 'kickoff':
-      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-      gameName = startGGNames["gameName"];
-      tournamentName = startGGNames["tournamentName"];
-      startGGID = startGGNames["id"];
+      
       return [{
         'message': "Aaaand we're live with " + tournamentName + "!\n\n🎙️ @" + body.com1.replace("@", "") + " & @" + body.com2.replace("@", "") + "\n⚔️ " + body.bracket + "\n\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
       }];
       break;
     case 'top-16':
-      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-      gameName = startGGNames["gameName"];
-      tournamentName = startGGNames["tournamentName"];
-      startGGID = startGGNames["id"];
       return [{
         'message': "Top 16 is decided!\n\nStop by the stream and place your bets:\n\n⚔️ " + body.bracket + "\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
       }];
       break;
     case 'top-8':
-      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-      gameName = startGGNames["gameName"];
-      tournamentName = startGGNames["tournamentName"];
-      startGGID = startGGNames["id"];
-      status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
       if (status === 'ACTIVE') {
         return [{
           'message': await startgg.getTop8(body['tournament_slug'], startGGID)
@@ -299,11 +292,6 @@ async function parseStartGGMatches(body) {
       }
       break;
     case 'top-4':
-      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-      gameName = startGGNames["gameName"];
-      tournamentName = startGGNames["tournamentName"];
-      startGGID = startGGNames["id"];
-      status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
       if (status === 'ACTIVE') {
         return [{
           'message': await startgg.getTop4(body['tournament_slug'], startGGID, gameName)
@@ -315,83 +303,50 @@ async function parseStartGGMatches(body) {
       }
       break;
     case 'losers-semis':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
-        var losersSemi = findMatchesInRound(matches, losersSemiRound);
-        var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], losersSemi);
+      if (status === 'ACTIVE') {
         return [{
-          'message': "⏬ Losers Semifinals ⏬\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
-        }]
+          'message': await startgg.getLosersSemiFinals(body['tournament_slug'], startGGID, gameName, body.matcherino)
+      }]
       } else {
         return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+          'error': '⚠️ This command only works if the bracket is ACTIVE.'
         }];
       }
       break;
     case 'losers-finals':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
-        var losersFinal =  findMatchesInRound(matches, losersFinalsRound);
-        var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], losersFinal);
+      if (status === 'ACTIVE') {
         return [{
-          'message': "⚠️ Losers Finals ⚠️\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
-        }]
+          'message': await startgg.getLosersFinals(body['tournament_slug'], startGGID, gameName, body.matcherino)
+      }]
       } else {
         return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+          'error': '⚠️ This command only works if the bracket is ACTIVE.'
         }];
       }
       break;
     case 'grand-finals':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
-        var grandFinals =  findMatchesInRound(matches, grandFinalsRound);
-        var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], grandFinals);
+      if (status === 'ACTIVE') {
         return [{
-          'message': "🚨 GRAND FINALS! 🚨\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
-        }]
+          'message': await startgg.getGrandFinal(body['tournament_slug'], startGGID, gameName, body.matcherino)
+      }]
       } else {
         return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+          'error': '⚠️ This command only works if the bracket is ACTIVE.'
         }];
       }
       break;
     case 'reset':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
-        var grandFinalsResetRound = parseInt(matches[matches.length-1]['match']['round']);
-        var grandFinalsReset =  findMatchesInRound(matches, grandFinalsResetRound);
-        var handles = await challonge.getTwitterHandles(body['organization'], body['tournament_slug'], grandFinalsReset);
+      if (status === 'ACTIVE') {
         return [{
-          'message': "WE HAVE A RESET!\n\n🥊 " + handles[0]['player1'] + " vs " + handles[0]['player2'] + "\n\n💰 " + body.matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName)
-        }]
+          'message': await startgg.getGrandFinalReset(body['tournament_slug'], startGGID, gameName, body.matcherino)
+      }]
       } else {
         return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+          'error': '⚠️ This command only works if the bracket is ACTIVE.'
         }];
       }
       break;
     case 'results':
-      startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-      gameName = startGGNames["gameName"];
-      tournamentName = startGGNames["tournamentName"];
-      startGGID = startGGNames["id"];
-      status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
       if (status === 'COMPLETED') {
         var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
       return [{

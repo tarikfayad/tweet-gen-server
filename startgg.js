@@ -176,6 +176,178 @@ let sets = getSetsWithID(eventID, response.data['data']['tournament']['events'])
 return await formatTop4String(sets, eventID, gameName);
 }
 
+const getLosersSemiFinals =  async function(slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
+      tournament(slug: $slug) {
+        events {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+  variables: {"slug":slug}
+});
+    
+var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+};
+
+let axiosAPI = axios.create(config);
+let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+return await formatLosersSemifinalsString(sets, eventID, gameName, matcherino);
+}
+
+const getLosersFinals =  async function(slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
+      tournament(slug: $slug) {
+        events {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+  variables: {"slug":slug}
+});
+    
+var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+};
+
+let axiosAPI = axios.create(config);
+let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+return await formatLosersFinalString(sets, eventID, gameName, matcherino);
+}
+
+const getGrandFinal =  async function(slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
+      tournament(slug: $slug) {
+        events {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+  variables: {"slug":slug}
+});
+    
+var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+};
+
+let axiosAPI = axios.create(config);
+let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+return await formatGrandFinalString(sets, eventID, gameName, matcherino);
+}
+
+const getGrandFinalReset =  async function(slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
+      tournament(slug: $slug) {
+        events {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+  variables: {"slug":slug}
+});
+    
+var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+};
+
+let axiosAPI = axios.create(config);
+let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+return await formatGrandFinalResetString(sets, eventID, gameName, matcherino);
+}
+
 const getFinalResults = async function(slug, eventID) {
   var data = JSON.stringify({
       query: `query TournamentQuery($slug: String) {
@@ -378,7 +550,83 @@ async function formatTop4String(sets, eventID, gameName) {
 
   console.log(handles);
 
-  return "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0][1] + " vs " + handles[0][1] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub";
+  return "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0] + " vs " + handles[1] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub";
+}
+
+async function formatLosersSemifinalsString(sets, eventID, gameName, matcherino) {
+  console.log('Getting Losers Semifinals from Startgg . . .');
+
+  let handles = [];
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Losers Semi-Final') {
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+    }
+  }
+
+  console.log(handles);
+
+  return "⏬ Losers Semifinals ⏬\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+}
+
+async function formatLosersFinalString(sets, eventID, gameName, matcherino) {
+  console.log('Getting Losers Final from Startgg . . .');
+
+  let handles = [];
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Losers Final') {
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+    }
+  }
+
+  console.log(handles);
+
+  return "⚠️ Losers Finals ⚠️\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+}
+
+async function formatGrandFinalString(sets, eventID, gameName, matcherino) {
+  console.log('Getting Grand Final from Startgg . . .');
+
+  let handles = [];
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Grand Final') {
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+    }
+  }
+
+  console.log(handles);
+
+  return "🚨 GRAND FINALS! 🚨\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+}
+
+async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) {
+  console.log('Getting Grand Final Reset from Startgg . . .');
+
+  let handles = [];
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Grand Final Reset') {
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+    }
+  }
+
+  console.log(handles);
+
+  return "WE HAVE A RESET!\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
 }
 
 // Helper Methods
@@ -463,5 +711,5 @@ function getHashtags(game) {
 }
 
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop4
+    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset
 }
