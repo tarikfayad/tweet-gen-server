@@ -235,7 +235,7 @@ function compareGameStrings(url, gameName) {
     console.log(escapedGameName);
     console.log(gameName);
 
-    if(escapedGameName.toUpperCase().includes(gameString.toUpperCase())) return true;
+    if(gameString.toUpperCase().includes(escapedGameName.toUpperCase())) return true;
     else return false;
 
 }
