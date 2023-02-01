@@ -20,7 +20,8 @@ app.post('/tweet-gen', async (req, res) => {
   try {
     const response = await axiosAPI.get('tournaments/' + req.body.organization + '-' + req.body.tournament_slug + '/matches.json?api_key=' + process.env.CHALLONGE_API_KEY);
     console.log('RESPONSE: ');
-    console.log(response);
+    console.log(response.data);
+    console.log(req.body);
     return res.status(200).json(await parseMatches(response.data, req.body));
   } catch (e) {
     console.log(e);
