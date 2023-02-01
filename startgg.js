@@ -230,6 +230,7 @@ const getEventStatus = async function(slug, eventID) {
     query: `query TournamentQuery($slug: String) {
       tournament(slug: $slug) {
         events {
+          id
           state
       }
     }
@@ -332,17 +333,11 @@ function getNumEntrants(id, eventArray) {
 }
 
 function getStatusWithID(id, eventArray) {
-  let status = '';
+  let status;
   eventArray.forEach(event => {
-    console.log(event);
-      if(id === event.id) {
-        status = JSON.stringify(event)['state'];
-        console.log(event.state)
-        console.log(status);
-      }
+      if(id === event.id) status = event.state;
   });
 
-  console.log(status);
   return status;
 }
 
