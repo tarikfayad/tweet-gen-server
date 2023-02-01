@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = require('express')();
 const axios = require('axios');
-const challonge = require('challonge.js')
+const challonge = require('./challonge.js');
 
 let gameName = '';
 let tournamentName = '';
