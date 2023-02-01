@@ -79,15 +79,63 @@ const getGameTournamentNameAndID = async function(slug, url) {
             gameName = event.videogame.displayName;
 
             information = {
-                'game': gameName,
-                'tournament': tournamentName,
+                'gameName': gameName,
+                'tournamentName': tournamentName,
                 'id': eventID
             }
         }
       });
-      
+
     console.log(information)
     return information;
+}
+
+const getFinalResults = async function(slug, eventID) {
+    var data = JSON.stringify({
+        query: `query TournamentQuery($slug: String) {
+            tournament(slug: $slug) {
+              events {
+                id
+                name
+                standings(query: {
+                perPage: 8,
+                page: 1
+              }){
+                nodes {
+                  placement
+                  entrant {
+                    id
+                    name
+                  }
+                }
+              }
+              }
+            }
+          }`,
+        variables: {"slug":slug}
+      });
+      
+      var config = {
+        headers: { 
+          'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+          'Content-Type': 'application/json'
+        }
+      };
+
+      let axiosAPI = axios.create(config);
+      let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+      let standings = getStandingsWithID(eventID, response.data['data']['tournament']['events']);
+}
+
+
+// Helper Methods
+function getStandingsWithID(id, eventArray) {
+    let standings;
+    eventArray.forEach(event => {
+        if(id === event.id) standings = event.standings;
+    });
+
+    return standings;
 }
 
 function compareGameStrings(url, gameName) {
