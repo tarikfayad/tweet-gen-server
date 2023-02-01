@@ -51,8 +51,7 @@ const getGameTournamentNameAndID = async function(slug, url) {
             }
           }
           }
-        }
-      }`,
+        }`,
         variables: {"slug":slug}
       });
       
