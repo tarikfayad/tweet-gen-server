@@ -1,6 +1,11 @@
 require('dotenv').config();
 const axios = require('axios');
 
+const  = axios.create({
+    baseURL: process.env.START_GG_BASE_URL,
+
+  });
+
 const getEventInfo = async function(slug) {
     var data = JSON.stringify({
         query: `query TournamentQuery($slug: String) {
@@ -36,8 +41,9 @@ const getEventInfo = async function(slug) {
         },
         data : data
       };
-      
-      return await axios(config).post();
+
+      let axiosAPI = axios.create(config);
+      return await axiosAPI.post();
 }
 
 
