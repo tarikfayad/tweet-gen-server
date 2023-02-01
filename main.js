@@ -21,7 +21,7 @@ app.post('/tweet-gen', async (req, res) => {
     } else if(req.body['service']==='start') {
       console.log("START GG");
       let response = await startgg.getEventInfo('wasd-live-13');
-      console.log(response);
+      console.log(JSON.stringify(response.data));
     }
   } catch (e) {
     console.log(e);
