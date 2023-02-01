@@ -334,7 +334,7 @@ function getNumEntrants(id, eventArray) {
 function getStatusWithID(id, eventArray) {
   let status;
   eventArray.forEach(event => {
-      if(id === event.id) status = event.state;
+      if(id === event.id) status = event['state'];
   });
 
   return status;
