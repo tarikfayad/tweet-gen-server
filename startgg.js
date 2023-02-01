@@ -242,6 +242,7 @@ function compareGameStrings(url, gameName) {
 
 function extractGame (url) {
     var pathArray = url.split( '/' );
+    console.log('path array: ' + pathArray[6]);
     return pathArray[6].replace('singles', '');
 }
 
