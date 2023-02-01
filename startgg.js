@@ -282,7 +282,8 @@ async function formatTop8String(sets, eventID) {
   console.log('Getting Tournament Top 8 . . .');
 
   let losersRound;
-  let winners, losers = [];
+  let winners = [];
+  let losers = [];
 
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
