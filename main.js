@@ -263,6 +263,7 @@ async function parseStartGGMatches(body) {
   tournamentName = startGGNames["tournamentName"];
   startGGID = startGGNames["id"];
 
+  console.log('STATUS:');
   console.log(status);
 
   switch (body.button) {
