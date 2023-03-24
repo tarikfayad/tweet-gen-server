@@ -585,6 +585,8 @@ async function formatTop8Players(sets, eventID) {
 
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
+    console.log('SET');
+    console.log(set);
     if(set['fullRoundText'] === 'Winners Semi-Final') {
       let handles = [];
       let p1Handle = set['slots'][0]['entrant']['name'];
