@@ -587,7 +587,7 @@ async function formatTop8Players(sets, eventID) {
     let set = sets[i];
     console.log('SET');
     console.log(set);
-    if(set['fullRoundText'] === 'Winners Semi-Final') {
+    if(set['fullRoundText'] === 'Winners Semi-Final' || set['fullRoundText'] === 'Winners Final' || set['fullRoundText'] === 'Grand Final') {
       let p1Handle = set['slots'][0]['entrant']['name'];
       let p2Handle = set['slots'][1]['entrant']['name'];
       winners.push({
@@ -616,6 +616,17 @@ async function formatTop8Players(sets, eventID) {
         'player1score': 0
       });
     }
+  }
+
+  if(set['fullRoundText'] === 'Losers Quarter-Final' || set['fullRoundText'] === 'Losers Semi-Final' || set['fullRoundText'] === 'Losers Final') {
+    let p1Handle = set['slots'][0]['entrant']['name'];
+    let p2Handle = set['slots'][1]['entrant']['name'];
+    losers.push({
+      'player1':p1Handle,
+      'player2': p2Handle,
+      'player1score': 0,
+      'player1score': 0
+    });
   }
 
   console.log(winners);
