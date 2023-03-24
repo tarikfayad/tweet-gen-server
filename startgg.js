@@ -612,6 +612,9 @@ async function formatTop8Players(sets, eventID) {
     }
   }
 
+  console.log(winners);
+  console.log(losers);
+
   return [{
     'matches': [
       {

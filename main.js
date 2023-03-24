@@ -263,6 +263,8 @@ async function parseStartGGMatches(body) {
   tournamentName = startGGNames["tournamentName"];
   startGGID = startGGNames["id"];
 
+  console.log(status);
+
   switch (body.button) {
     case 'starting-soon':
       return [{
