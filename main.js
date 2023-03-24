@@ -258,10 +258,10 @@ async function parseStartGGMatches(body) {
   console.log('BUTTON:');
   console.log(body.button);
   let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-  let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
   gameName = startGGNames["gameName"];
   tournamentName = startGGNames["tournamentName"];
   startGGID = startGGNames["id"];
+  let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
 
   console.log('STATUS:');
   console.log(status);
