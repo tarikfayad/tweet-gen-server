@@ -360,51 +360,52 @@ async function parseStartGGMatches(body) {
       break;
 
     case 'populate-top-8':
-      if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
-        startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
-        gameName = startGGNames["gameName"];
-        tournamentName = startGGNames["tournamentName"];
-        startGGID = startGGNames["id"];
+      return  await startgg.getTop8(body['tournament_slug'], startGGID);
+      // if (await challonge.isTournamentInProgress(body['organization'], body['tournament_slug'])) {
+      //   startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
+      //   gameName = startGGNames["gameName"];
+      //   tournamentName = startGGNames["tournamentName"];
+      //   startGGID = startGGNames["id"];
 
-        var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2
-        var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
-        var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
+      //   var winnersRound = parseInt(matches[matches.length-1]['match']['round']) - 2
+      //   var winnersFinalsRound = parseInt(matches[matches.length-1]['match']['round']) - 1;
+      //   var grandFinalsRound = parseInt(matches[matches.length-2]['match']['round']);
 
-        var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
-        var losersQuarterRound = parseInt(matches[matches.length-5]['match']['round']);
-        var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
-        var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
+      //   var losersRound = parseInt(matches[matches.length-3]['match']['round']) + 3;
+      //   var losersQuarterRound = parseInt(matches[matches.length-5]['match']['round']);
+      //   var losersSemiRound = parseInt(matches[matches.length-4]['match']['round']);
+      //   var losersFinalsRound = parseInt(matches[matches.length-3]['match']['round']);
 
-        var winnersTop8 = findMatchesInRound(matches, winnersRound);
-        var winnersFinals = findMatchesInRound(matches, winnersFinalsRound);
-        var grandFinals = findMatchesInRound(matches, grandFinalsRound);
+      //   var winnersTop8 = findMatchesInRound(matches, winnersRound);
+      //   var winnersFinals = findMatchesInRound(matches, winnersFinalsRound);
+      //   var grandFinals = findMatchesInRound(matches, grandFinalsRound);
 
-        var losersTop8 = findMatchesInRound(matches, losersRound);
-        var losersQuarters = findMatchesInRound(matches, losersQuarterRound);
-        var losersSemis = findMatchesInRound(matches, losersSemiRound);
-        var losersFinals = findMatchesInRound(matches, losersFinalsRound);
+      //   var losersTop8 = findMatchesInRound(matches, losersRound);
+      //   var losersQuarters = findMatchesInRound(matches, losersQuarterRound);
+      //   var losersSemis = findMatchesInRound(matches, losersSemiRound);
+      //   var losersFinals = findMatchesInRound(matches, losersFinalsRound);
 
-        let winners = winnersTop8.concat(winnersFinals, grandFinals)
-        let losers = losersTop8.concat(losersQuarters, losersSemis, losersFinals)
+      //   let winners = winnersTop8.concat(winnersFinals, grandFinals)
+      //   let losers = losersTop8.concat(losersQuarters, losersSemis, losersFinals)
 
-        var winnersHandles = await challonge.getUsernamesAndScores(body['organization'], body['tournament_slug'], winners);
-        var losersHandles = await challonge.getUsernamesAndScores(body['organization'], body['tournament_slug'], losers);
+      //   var winnersHandles = await challonge.getUsernamesAndScores(body['organization'], body['tournament_slug'], winners);
+      //   var losersHandles = await challonge.getUsernamesAndScores(body['organization'], body['tournament_slug'], losers);
 
-        return [{
-          'matches': [
-            {
-              'winners': winnersHandles
-            },
-            {
-              'losers': losersHandles
-            }
-          ]
-        }];
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
-        }];
-      }
+      //   return [{
+      //     'matches': [
+      //       {
+      //         'winners': winnersHandles
+      //       },
+      //       {
+      //         'losers': losersHandles
+      //       }
+      //     ]
+      //   }];
+      // } else {
+      //   return [{
+      //     'error': '⚠️ This command only works if the bracket is IN PROGRESS.'
+      //   }];
+      // }
       break;
     default:
   }
