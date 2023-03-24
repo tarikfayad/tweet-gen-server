@@ -588,12 +588,14 @@ async function formatTop8Players(sets, eventID) {
     console.log('SET');
     console.log(set);
     if(set['fullRoundText'] === 'Winners Semi-Final') {
-      let handles = [];
       let p1Handle = set['slots'][0]['entrant']['name'];
       let p2Handle = set['slots'][1]['entrant']['name'];
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-      winners.push(handles);
+      winners.push({
+        'player1':p1Handle,
+        'player2': p2Handle,
+        'player1score': 0,
+        'player1score': 0
+      });
     } else if (set['fullRoundText'] === 'Losers Quarter-Final') {
       if(!losersRoundSet) {
         losersRound = set['round'] + 1;
@@ -605,12 +607,14 @@ async function formatTop8Players(sets, eventID) {
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
     if(set['round'] === losersRound) {
-      let handles = [];
       let p1Handle = set['slots'][0]['entrant']['name'];
       let p2Handle = set['slots'][1]['entrant']['name'];
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-      losers.push(handles);
+      losers.push({
+        'player1':p1Handle,
+        'player2': p2Handle,
+        'player1score': 0,
+        'player1score': 0
+      });
     }
   }
 
