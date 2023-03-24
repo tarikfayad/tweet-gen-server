@@ -509,6 +509,7 @@ let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
 let status = getStatusWithID(eventID, response.data['data']['tournament']['events']);
 
 console.log('STATTTTTS');
+console.log(response.data['data']['tournament']['events']);
 console.log(status);
 
 return status;
