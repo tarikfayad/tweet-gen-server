@@ -263,9 +263,6 @@ async function parseStartGGMatches(body) {
   startGGID = startGGNames["id"];
   let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
 
-  console.log('STATUS:');
-  console.log(status);
-
   switch (body.button) {
     case 'starting-soon':
       return [{

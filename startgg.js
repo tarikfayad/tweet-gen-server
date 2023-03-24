@@ -508,10 +508,6 @@ let axiosAPI = axios.create(config);
 let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
 let status = getStatusWithID(eventID, response.data['data']['tournament']['events']);
 
-console.log('STATTTTTS');
-console.log(response.data['data']['tournament']['events']);
-console.log(status);
-
 return status;
 }
 
@@ -591,8 +587,8 @@ async function formatTop8Players(sets, eventID) {
     let set = sets[i];
     if(set['fullRoundText'] === 'Winners Semi-Final') {
       let handles = [];
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      let p1Handle = set['slots'][0]['entrant']['name'];
+      let p2Handle = set['slots'][1]['entrant']['name'];
       handles.push(p1Handle);
       handles.push(p2Handle);
       winners.push(handles);
@@ -608,8 +604,8 @@ async function formatTop8Players(sets, eventID) {
     let set = sets[i];
     if(set['round'] === losersRound) {
       let handles = [];
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      let p1Handle = set['slots'][0]['entrant']['name'];
+      let p2Handle = set['slots'][1]['entrant']['name'];
       handles.push(p1Handle);
       handles.push(p2Handle);
       losers.push(handles);
@@ -748,8 +744,6 @@ function getNumEntrants(id, eventArray) {
 function getStatusWithID(id, eventArray) {
   let status;
   eventArray.forEach(event => {
-    console.log(id);
-    console.log(event.id);
       if(id === event.id) status = event.state;
   });
 
