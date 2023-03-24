@@ -618,15 +618,18 @@ async function formatTop8Players(sets, eventID) {
     }
   }
 
-  if(set['fullRoundText'] === 'Losers Quarter-Final' || set['fullRoundText'] === 'Losers Semi-Final' || set['fullRoundText'] === 'Losers Final') {
-    let p1Handle = set['slots'][0]['entrant']['name'];
-    let p2Handle = set['slots'][1]['entrant']['name'];
-    losers.push({
-      'player1':p1Handle,
-      'player2': p2Handle,
-      'player1score': 0,
-      'player1score': 0
-    });
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Losers Quarter-Final' || set['fullRoundText'] === 'Losers Semi-Final' || set['fullRoundText'] === 'Losers Final') {
+      let p1Handle = set['slots'][0]['entrant']['name'];
+      let p2Handle = set['slots'][1]['entrant']['name'];
+      losers.push({
+        'player1':p1Handle,
+        'player2': p2Handle,
+        'player1score': 0,
+        'player1score': 0
+      });
+    }
   }
 
   console.log(winners);
