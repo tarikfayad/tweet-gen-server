@@ -133,6 +133,49 @@ let sets = getSetsWithID(eventID, response.data['data']['tournament']['events'])
 return await formatTop8String(sets, eventID);
 }
 
+const getTop8Players =  async function(slug, eventID) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
+      tournament(slug: $slug) {
+        events {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+  variables: {"slug":slug}
+});
+    
+var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+};
+
+let axiosAPI = axios.create(config);
+let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+return await formatTop8Players(sets, eventID);
+}
+
 const getTop4 =  async function(slug, eventID, gameName) {
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String) {
@@ -534,6 +577,53 @@ async function formatTop8String(sets, eventID) {
   return '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nl:\n' + losers[0][0] + ' vs ' + losers[0][1] + '\n' + losers[1][0] + ' vs ' + losers[1][1] +'\n\n📺 https://twitch.tv/ImpurestClub';
 }
 
+async function formatTop8Players(sets, eventID) {
+  let losersRound;
+  let winners = [];
+  let losers = [];
+  let losersRoundSet = false;
+
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Winners Semi-Final') {
+      let handles = [];
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+      winners.push(handles);
+    } else if (set['fullRoundText'] === 'Losers Quarter-Final') {
+      if(!losersRoundSet) {
+        losersRound = set['round'] + 1;
+        losersRoundSet = true;
+      }
+    }
+  }
+
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['round'] === losersRound) {
+      let handles = [];
+      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
+      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
+      handles.push(p1Handle);
+      handles.push(p2Handle);
+      losers.push(handles);
+    }
+  }
+
+  return [{
+    'matches': [
+      {
+        'winners': winners
+      },
+      {
+        'losers': losers
+      }
+    ]
+  }];
+}
+
 async function formatTop4String(sets, eventID, gameName) {
   console.log('Getting Winners Finals from Startgg . . .');
 
@@ -714,5 +804,5 @@ function getHashtags(game) {
 }
 
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset
+    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset
 }
