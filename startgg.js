@@ -433,8 +433,6 @@ const getFinalResults = async function(slug, eventID) {
 }
 
 const getPlayerTwitterHandle = async function(playerHandle, eventID){
-  console.log(playerHandle);
-  console.log(eventID);
   var data = JSON.stringify({
     query: `query TournamentQuery($eventID: ID!, $playerHandle: String) {
       event(id: $eventID) {
@@ -477,13 +475,13 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
   let authorizations = response.data['data']['event']['entrants']['nodes'][0]['participants'][0]['player']['user']['authorizations'];
-  console.log("AUTORIZATIONS");
-  console.log(response.data['data']['event']['entrants']['nodes']);
-  console.log(response.data);
   let handle;
-  authorizations.forEach(authorization => {
-    if(authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
-  });
+  if (!authorizations) handle = playerHandle;
+  else {
+    authorizations.forEach(authorization => {
+      if(authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
+    });
+  }
   if(!handle) handle = playerHandle;
   else handle = '@' + handle;
   return handle;
