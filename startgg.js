@@ -481,9 +481,10 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
     authorizations.forEach(authorization => {
       if(authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
     });
+
+    if(!handle) handle = playerHandle;
+    else handle = '@' + handle;
   }
-  if(!handle) handle = playerHandle;
-  else handle = '@' + handle;
   return handle;
 }
 
