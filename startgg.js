@@ -475,6 +475,9 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
   let authorizations = response.data['data']['event']['entrants']['nodes'][0]['participants'][0]['player']['user']['authorizations'];
+  console.log("AUTORIZATIONS");
+  console.log(authorizations);
+  console.log(response.data);
   let handle;
   authorizations.forEach(authorization => {
     if(authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
@@ -745,8 +748,6 @@ async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) 
 // Helper Methods
 function getStandingsWithID(id, eventArray) {
   let standings;
-  console.log("EVENT ARRAY");
-  console.log(eventArray);
   eventArray.forEach(event => {
       if(id === event.id) standings = event.standings.nodes;
   });
