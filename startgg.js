@@ -745,6 +745,8 @@ async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) 
 // Helper Methods
 function getStandingsWithID(id, eventArray) {
   let standings;
+  console.log("EVENT ARRAY");
+  console.log(eventArray);
   eventArray.forEach(event => {
       if(id === event.id) standings = event.standings.nodes;
   });
