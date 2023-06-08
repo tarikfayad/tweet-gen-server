@@ -787,9 +787,8 @@ function getSetsWithID(id, eventArray) {
 }
 
 function compareGameStrings(shortCode, gameName) {
-    let gameString = getGameNameFromShortCode(shortCode);
-    // let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
-    let escapedGameName = gameName;
+    let gameString = getGameNameFromShortCode(shortCode).replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
+    let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
 
     console.log("COMPARISON OF NAMES:");
     console.log(gameString);
@@ -820,7 +819,7 @@ function getGameNameFromShortCode(shortCode) {
 				return 'DNF Duel';
         break;
 			case 'GBVS':
-				return 'Granblue Fantasy Versus';
+				return 'Granblue Fantasy: Versus';
         break;
 			case 'P4AU':
 				return 'Persona 4 Arena Ultimax';
