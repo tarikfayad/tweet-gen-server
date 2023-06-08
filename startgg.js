@@ -791,6 +791,10 @@ function compareGameStrings(shortCode, gameName) {
     // let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
     let escapedGameName = gameName;
 
+    console.log("COMPARISON OF NAMES:");
+    console.log(gameString);
+    console.log(escapedGameName);
+
     if(gameString.toUpperCase().includes(escapedGameName.toUpperCase()) || escapedGameName.toUpperCase().includes(gameString.toUpperCase())) return true;
     else return false;
 
