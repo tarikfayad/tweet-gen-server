@@ -86,7 +86,7 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
         }
       });
 
-    console.log(information)
+    console.log(information);
     return information;
 }
 
