@@ -85,7 +85,7 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
             }
         }
       });
-
+    console.log("IONFORMATION");
     console.log(information);
     return information;
 }
