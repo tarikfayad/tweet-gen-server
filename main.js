@@ -257,7 +257,7 @@ async function parseChallongeMatches(matches, body) {
 async function parseStartGGMatches(body) {
   console.log('BUTTON:');
   console.log(body.button);
-  let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.bracket);
+  let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
   gameName = startGGNames["gameName"];
   tournamentName = startGGNames["tournamentName"];
   startGGID = startGGNames["id"];

@@ -38,7 +38,7 @@ const getEventInfo = async function(slug) {
       return await axiosAPI.post(process.env.START_GG_BASE_URL, data);
 }
 
-const getGameTournamentNameAndID = async function(slug, url) {
+const getGameTournamentNameAndID = async function(slug, shortCode) {
     var data = JSON.stringify({
         query: `query TournamentQuery($slug: String) {
         tournament(slug: $slug) {
@@ -74,7 +74,7 @@ const getGameTournamentNameAndID = async function(slug, url) {
       let information;
       eventArray.forEach(event => {
 
-        if(compareGameStrings(url, event.videogame.displayName)) {
+        if(compareGameStrings(shortCode, event.videogame.displayName)) {
             eventID = event.id;
             gameName = event.videogame.displayName;
 
@@ -783,49 +783,85 @@ function getSetsWithID(id, eventArray) {
   return sets;
 }
 
-function compareGameStrings(url, gameName) {
-    let gameString = extractGame(url);
-    let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
+function compareGameStrings(shortCode, gameName) {
+    let gameString = getGameNameFromShortCode(shortCode);
+    // let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
+    let escapedGameName = gameName;
 
     if(gameString.toUpperCase().includes(escapedGameName.toUpperCase()) || escapedGameName.toUpperCase().includes(gameString.toUpperCase())) return true;
     else return false;
 
 }
 
-function extractGame (url) {
-    var pathArray = url.split( '/' );
-    return pathArray[6].replace('singles', '');
+// function extractGame (url) {
+//     var pathArray = url.split( '/' );
+//     return pathArray[6].replace('singles', '');
+// }
+
+function getGameNameFromShortCode(shortCode) {
+  switch (shortCode) {
+    case 'BBCF':
+				return 'BlazBlue: Central Fiction';
+			case 'BBTAG':
+				return 'BlazBlue: Cross Tag Battle';
+			case 'DBFZ':
+				return 'Dragon Ball FighterZ';
+			case 'DNF':
+				return 'DNF Duel';
+			case 'GBVS':
+				return 'Granblue Fantasy Versus';
+			case 'P4AU':
+				return 'Persona 4 Arena Ultimax';
+			case 'GGXRD':
+				return 'Guilty Gear Xrd';
+			case 'GGST':
+				return 'Guilty Gear -STRIVE-'
+			case 'KOFXIV':
+				return 'The King of Fighters XIV'
+			case 'MBTL':
+				return 'Melty Blood: Type Lumina'
+			case 'MVCI':
+				return 'Marvel vs. Capcom: Infinite'
+			case 'SFVCE':
+				return 'Street Fighter V'
+			case 'SF6':
+				return 'Street Fighter 6'
+			case 'TEKKEN7':
+				return 'Tekken 7'
+			case 'UMVC3':
+				return 'Ultimate Marvel vs. Capcom 3'
+			case 'UNICLR':
+				return 'UNDER NIGHT IN-BIRTH Exe:Late[cl-r]'
+			case 'USF4':
+				return 'Ultra Street Fighter IV'
+			case 'SF6':
+				return 'Street Fighter 6'
+			default:
+  }
 }
 
 function getHashtags(game) {
   switch (game) {
     case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy'
-      break;
     case 'Under Night In-Birth Exe:Late[cl-r]':
       return '#UNICLR #inbirth'
-      break;
     case 'Guilty Gear: Strive':
       return '#GGST #GuiltyGear'
-      break;
     case 'Guilty Gear Xrd REV2':
       return '#GGXRD #GuiltyGear'
-      break;
     case 'Melty Blood: Type Lumina':
       return '#MBTL #MBTL_Tournament'
-      break;
     case 'BlazBlue: Central Fiction':
       return '#BBCF #BlazBlue'
-      break;
     case 'Guilty Gear XX Accent Core':
       return '#GGACPR #GuiltyGear'
-      break;
     case 'DNF Duel':
       return '#DNF #DNFDuel'
-      break;
     case 'Persona 4 Arena Ultimax':
       return '#P4AU #Persona'
-      break;
+    case 'Street Fighter 6':
+      return '#SF6 #STREETFIGHTER6 #STREETFIGHTER'
     default:
   }
 }
