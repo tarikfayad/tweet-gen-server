@@ -83,11 +83,14 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
                 'tournamentName': tournamentName,
                 'id': eventID
             }
+        } else {
+          console.log("COMPARISON ERROR!");
         }
       });
-    console.log("IONFORMATION");
-    console.log(information);
-    return information;
+    
+      console.log("IONFORMATION");
+      console.log(information);
+      return information;
 }
 
 const getTop8 =  async function(slug, eventID) {
