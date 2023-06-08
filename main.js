@@ -387,30 +387,22 @@ function findMatchesInRound (matches, round) {
 
 function getHashtags(game) {
   switch (game) {
-    case 'Granblue Fantasy Versus':
+    case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy'
-      break;
     case 'Under Night In-Birth Exe:Late[cl-r]':
       return '#UNICLR #inbirth'
-      break;
     case 'Guilty Gear -Strive-':
       return '#GGST #GuiltyGear'
-      break;
     case 'Melty Blood: Type Lumina':
       return '#MBTL #MBTL_Tournament'
-      break;
     case 'BlazBlue: Central Fiction':
       return '#BBCF #BlazBlue'
-      break;
     case 'Guilty Gear XX Accent Core':
       return '#GGACPR #GuiltyGear'
-      break;
     case 'DNF Duel':
       return '#DNF #DNFDuel'
-      break;
     case 'Persona 4 Arena Ultimax':
       return '#P4AU #Persona'
-      break;
     default:
   }
 }

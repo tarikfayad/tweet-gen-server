@@ -88,8 +88,6 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
         }
       });
     
-      console.log("IONFORMATION");
-      console.log(information);
       return information;
 }
 
@@ -790,10 +788,6 @@ function compareGameStrings(shortCode, gameName) {
     let gameString = getGameNameFromShortCode(shortCode).replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
     let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
 
-    console.log("COMPARISON OF NAMES:");
-    console.log(gameString);
-    console.log(escapedGameName);
-
     if(gameString.toUpperCase().includes(escapedGameName.toUpperCase()) || escapedGameName.toUpperCase().includes(gameString.toUpperCase())) return true;
     else return false;
 
@@ -808,96 +802,66 @@ function getGameNameFromShortCode(shortCode) {
   switch (shortCode) {
     case 'BBCF':
 				return 'BlazBlue: Central Fiction';
-        break;
 			case 'BBTAG':
 				return 'BlazBlue: Cross Tag Battle';
-        break;
 			case 'DBFZ':
 				return 'Dragon Ball FighterZ';
-        break;
 			case 'DNF':
 				return 'DNF Duel';
-        break;
 			case 'GBVS':
 				return 'Granblue Fantasy: Versus';
-        break;
 			case 'P4AU':
 				return 'Persona 4 Arena Ultimax';
-        break;
 			case 'GGXRD':
 				return 'Guilty Gear Xrd';
-        break;
 			case 'GGST':
 				return 'Guilty Gear -STRIVE-';
-        break;
 			case 'KOFXIV':
 				return 'The King of Fighters XIV';
-        break;
 			case 'MBTL':
 				return 'Melty Blood: Type Lumina';
-        break;
 			case 'MVCI':
 				return 'Marvel vs. Capcom: Infinite';
-        break;
 			case 'SFVCE':
 				return 'Street Fighter V';
-        break;
 			case 'SF6':
 				return 'Street Fighter 6';
-        break;
 			case 'TEKKEN7':
 				return 'Tekken 7';
-        break;
 			case 'UMVC3':
 				return 'Ultimate Marvel vs. Capcom 3';
-        break;
 			case 'UNICLR':
 				return 'UNDER NIGHT IN-BIRTH Exe:Late[cl-r]';
-        break;
 			case 'USF4':
 				return 'Ultra Street Fighter IV';
-        break;
 			case 'SF6':
 				return 'Street Fighter 6';
-        break;
 			default:
   }
 }
 
 function getHashtags(game) {
-  console.log("hashtags");
-  console.log(game);
   switch (game) {
     case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy';
-      break;
     case 'Under Night In-Birth Exe:Late[cl-r]':
       return '#UNICLR #inbirth';
-      break;
     case 'Guilty Gear: Strive':
       return '#GGST #GuiltyGear';
-      break;
     case 'Guilty Gear Xrd REV2':
       return '#GGXRD #GuiltyGear';
-      break;
     case 'Melty Blood: Type Lumina':
       return '#MBTL #MBTL_Tournament';
-      break;
     case 'BlazBlue: Central Fiction':
       return '#BBCF #BlazBlue';
-      break;
     case 'Guilty Gear XX Accent Core':
       return '#GGACPR #GuiltyGear';
-      break;
     case 'DNF Duel':
       return '#DNF #DNFDuel';
-      break;
     case 'Persona 4 Arena Ultimax':
       return '#P4AU #Persona';
-      break;
     case 'Street Fighter 6':
       return '#SF6 #STREETFIGHTER6 #STREETFIGHTER';
-      break;
     default:
   }
 }
