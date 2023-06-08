@@ -865,6 +865,7 @@ function getGameNameFromShortCode(shortCode) {
 }
 
 function getHashtags(game) {
+  console.log("hashtags: " + game);
   switch (game) {
     case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy';
