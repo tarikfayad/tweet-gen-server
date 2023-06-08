@@ -802,40 +802,58 @@ function getGameNameFromShortCode(shortCode) {
   switch (shortCode) {
     case 'BBCF':
 				return 'BlazBlue: Central Fiction';
+        break;
 			case 'BBTAG':
 				return 'BlazBlue: Cross Tag Battle';
+        break;
 			case 'DBFZ':
 				return 'Dragon Ball FighterZ';
+        break;
 			case 'DNF':
 				return 'DNF Duel';
+        break;
 			case 'GBVS':
 				return 'Granblue Fantasy Versus';
+        break;
 			case 'P4AU':
 				return 'Persona 4 Arena Ultimax';
+        break;
 			case 'GGXRD':
 				return 'Guilty Gear Xrd';
+        break;
 			case 'GGST':
-				return 'Guilty Gear -STRIVE-'
+				return 'Guilty Gear -STRIVE-';
+        break;
 			case 'KOFXIV':
-				return 'The King of Fighters XIV'
+				return 'The King of Fighters XIV';
+        break;
 			case 'MBTL':
-				return 'Melty Blood: Type Lumina'
+				return 'Melty Blood: Type Lumina';
+        break;
 			case 'MVCI':
-				return 'Marvel vs. Capcom: Infinite'
+				return 'Marvel vs. Capcom: Infinite';
+        break;
 			case 'SFVCE':
-				return 'Street Fighter V'
+				return 'Street Fighter V';
+        break;
 			case 'SF6':
-				return 'Street Fighter 6'
+				return 'Street Fighter 6';
+        break;
 			case 'TEKKEN7':
-				return 'Tekken 7'
+				return 'Tekken 7';
+        break;
 			case 'UMVC3':
-				return 'Ultimate Marvel vs. Capcom 3'
+				return 'Ultimate Marvel vs. Capcom 3';
+        break;
 			case 'UNICLR':
-				return 'UNDER NIGHT IN-BIRTH Exe:Late[cl-r]'
+				return 'UNDER NIGHT IN-BIRTH Exe:Late[cl-r]';
+        break;
 			case 'USF4':
-				return 'Ultra Street Fighter IV'
+				return 'Ultra Street Fighter IV';
+        break;
 			case 'SF6':
-				return 'Street Fighter 6'
+				return 'Street Fighter 6';
+        break;
 			default:
   }
 }
@@ -843,25 +861,35 @@ function getGameNameFromShortCode(shortCode) {
 function getHashtags(game) {
   switch (game) {
     case 'Granblue Fantasy: Versus':
-      return '#GBVS #GranblueFantasy'
+      return '#GBVS #GranblueFantasy';
+      break;
     case 'Under Night In-Birth Exe:Late[cl-r]':
-      return '#UNICLR #inbirth'
+      return '#UNICLR #inbirth';
+      break;
     case 'Guilty Gear: Strive':
-      return '#GGST #GuiltyGear'
+      return '#GGST #GuiltyGear';
+      break;
     case 'Guilty Gear Xrd REV2':
-      return '#GGXRD #GuiltyGear'
+      return '#GGXRD #GuiltyGear';
+      break;
     case 'Melty Blood: Type Lumina':
-      return '#MBTL #MBTL_Tournament'
+      return '#MBTL #MBTL_Tournament';
+      break;
     case 'BlazBlue: Central Fiction':
-      return '#BBCF #BlazBlue'
+      return '#BBCF #BlazBlue';
+      break;
     case 'Guilty Gear XX Accent Core':
-      return '#GGACPR #GuiltyGear'
+      return '#GGACPR #GuiltyGear';
+      break;
     case 'DNF Duel':
-      return '#DNF #DNFDuel'
+      return '#DNF #DNFDuel';
+      break;
     case 'Persona 4 Arena Ultimax':
-      return '#P4AU #Persona'
+      return '#P4AU #Persona';
+      break;
     case 'Street Fighter 6':
-      return '#SF6 #STREETFIGHTER6 #STREETFIGHTER'
+      return '#SF6 #STREETFIGHTER6 #STREETFIGHTER';
+      break;
     default:
   }
 }
