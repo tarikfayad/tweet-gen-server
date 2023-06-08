@@ -67,8 +67,8 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
 
       console.log('getGameTournamentNameAndID: ' + JSON.stringify(response.data));
 
-      let tournamentName = response.data['data']['tournament']['name'];
-      let eventID, gameName;
+      // let tournamentName = response.data['data']['tournament']['name'];
+      let tournamentName, eventID, gameName;
 
       let eventArray = response.data['data']['tournament']['events'];
       let information;
@@ -77,6 +77,7 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
         if(compareGameStrings(shortCode, event.videogame.displayName)) {
             eventID = event.id;
             gameName = event.videogame.displayName;
+            tournamentName = event.name;
 
             information = {
                 'gameName': gameName,
