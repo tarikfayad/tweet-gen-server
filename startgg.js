@@ -75,6 +75,7 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
       eventArray.forEach(event => {
 
         if(compareGameStrings(shortCode, event.videogame.displayName)) {
+          console.log(event);
             eventID = event.id;
             gameName = event.videogame.displayName;
             tournamentName = event.name;
