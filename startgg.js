@@ -152,7 +152,6 @@ const getTop8Players =  async function(slug, eventID) {
             nodes {
               round
               fullRoundText
-              displayScore
               slots(includeByes: true) {
                   entrant {
                       name
