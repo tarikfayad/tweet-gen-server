@@ -144,7 +144,7 @@ const getTop8Players =  async function(slug, eventID) {
         events {
             id
           state
-          sets(page:1, perPage: 999) {
+          sets(page:1, perPage: 500) {
             pageInfo{
               perPage: perPage,
               page: page
@@ -152,6 +152,7 @@ const getTop8Players =  async function(slug, eventID) {
             nodes {
               round
               fullRoundText
+              displayScore
               slots(includeByes: true) {
                   entrant {
                       name
