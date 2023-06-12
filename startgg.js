@@ -397,6 +397,7 @@ return await formatGrandFinalResetString(sets, eventID, gameName, matcherino);
 }
 
 const getFinalResults = async function(slug, eventID) {
+  console.log(slug);
   var data = JSON.stringify({
       query: `query TournamentQuery($slug: String) {
           tournament(slug: $slug) {
