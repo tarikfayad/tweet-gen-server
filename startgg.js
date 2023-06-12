@@ -138,13 +138,14 @@ return await formatTop8String(sets, eventID);
 }
 
 const getTop8Players =  async function(slug, eventID) {
+  console.log(slug);
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String) {
       tournament(slug: $slug) {
         events {
             id
           state
-          sets(page:1, perPage: 250) {
+          sets(page:1, perPage: 999) {
             pageInfo{
               perPage: perPage,
               page: page
@@ -152,6 +153,7 @@ const getTop8Players =  async function(slug, eventID) {
             nodes {
               round
               fullRoundText
+              displayScore
               slots(includeByes: true) {
                   entrant {
                       name
