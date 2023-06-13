@@ -223,6 +223,7 @@ var config = {
 
 let axiosAPI = axios.create(config);
 let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+console.log(response.data);
 let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
 
 return await formatTop4String(sets, eventID, gameName);
