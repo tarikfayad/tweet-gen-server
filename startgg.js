@@ -685,7 +685,7 @@ async function formatTop8Players(sets, eventID) {
         'winners': winners.reverse()
       },
       {
-        'losers': losers.reverse()
+        'losers': losers
       }
     ]
   }];
