@@ -131,6 +131,7 @@ var config = {
 
 let axiosAPI = axios.create(config);
 let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+console.log('TOP 8 RESPONSE:');
 console.log(response.data);
 let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
 
@@ -397,7 +398,6 @@ return await formatGrandFinalResetString(sets, eventID, gameName, matcherino);
 }
 
 const getFinalResults = async function(slug, eventID) {
-  console.log(slug);
   var data = JSON.stringify({
       query: `query TournamentQuery($slug: String) {
           tournament(slug: $slug) {
