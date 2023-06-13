@@ -168,7 +168,10 @@ const getTop8Players =  async function(slug, eventID) {
       }
     }
   }`,
-  variables: {"slug":slug}
+  variables: {
+    "slug":slug,
+    "eventID": eventID
+  }
 });
     
 var config = {
