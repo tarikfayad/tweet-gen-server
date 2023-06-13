@@ -94,12 +94,10 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
 }
 
 const getTop8 =  async function(slug, eventID) {
-  console.log('Top 8 Request');
-  console.log(eventID);
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events(id: $eventID) {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
