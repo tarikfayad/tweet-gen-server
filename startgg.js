@@ -794,11 +794,10 @@ function getSetsWithID(id, eventArray) {
 
 function compareGameStrings(shortCode, gameName) {
     console.log('GAME NAMES!');
-    console.log(gameString);
-    console.log(escapedGameName);
-
     let gameString = getGameNameFromShortCode(shortCode).replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
+    console.log(gameString);
     let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
+    console.log(escapedGameName);
 
     if(gameString.toUpperCase().includes(escapedGameName.toUpperCase()) || escapedGameName.toUpperCase().includes(gameString.toUpperCase())) return true;
     else return false;
