@@ -144,9 +144,9 @@ return await formatTop8String(sets, eventID);
 const getTop8Players =  async function(slug, eventID) {
   console.log(slug);
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
@@ -187,9 +187,9 @@ return await formatTop8Players(sets, eventID);
 
 const getTop4 =  async function(slug, eventID, gameName) {
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
@@ -230,9 +230,9 @@ return await formatTop4String(sets, eventID, gameName);
 
 const getLosersSemiFinals =  async function(slug, eventID, gameName, matcherino) {
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
@@ -273,9 +273,9 @@ return await formatLosersSemifinalsString(sets, eventID, gameName, matcherino);
 
 const getLosersFinals =  async function(slug, eventID, gameName, matcherino) {
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
@@ -316,9 +316,9 @@ return await formatLosersFinalString(sets, eventID, gameName, matcherino);
 
 const getGrandFinal =  async function(slug, eventID, gameName, matcherino) {
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
@@ -359,9 +359,9 @@ return await formatGrandFinalString(sets, eventID, gameName, matcherino);
 
 const getGrandFinalReset =  async function(slug, eventID, gameName, matcherino) {
   var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
-        events {
+        events(filter: {id: $eventID}) {
             id
           state
           sets(page:1, perPage: 999) {
@@ -402,9 +402,9 @@ return await formatGrandFinalResetString(sets, eventID, gameName, matcherino);
 
 const getFinalResults = async function(slug, eventID) {
   var data = JSON.stringify({
-      query: `query TournamentQuery($slug: String) {
+      query: `query TournamentQuery($slug: String, $eventID: ID) {
           tournament(slug: $slug) {
-            events {
+            events(filter: {id: $eventID}) {
               id
               name
               numEntrants
