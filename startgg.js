@@ -211,7 +211,10 @@ const getTop4 =  async function(slug, eventID, gameName) {
       }
     }
   }`,
-  variables: {"slug":slug}
+  variables: {
+    "slug":slug,
+    "eventID": eventID
+  }
 });
     
 var config = {
@@ -255,7 +258,10 @@ const getLosersSemiFinals =  async function(slug, eventID, gameName, matcherino)
       }
     }
   }`,
-  variables: {"slug":slug}
+  variables: {
+    "slug":slug,
+    "eventID": eventID
+}
 });
     
 var config = {
@@ -298,7 +304,10 @@ const getLosersFinals =  async function(slug, eventID, gameName, matcherino) {
       }
     }
   }`,
-  variables: {"slug":slug}
+  variables: {
+    "slug":slug,
+    "eventID": eventID
+  }
 });
     
 var config = {
@@ -341,7 +350,10 @@ const getGrandFinal =  async function(slug, eventID, gameName, matcherino) {
       }
     }
   }`,
-  variables: {"slug":slug}
+  variables: {
+    "slug":slug,
+    "eventID": eventID
+  }
 });
     
 var config = {
