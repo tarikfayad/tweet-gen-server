@@ -690,7 +690,73 @@ async function formatTop8Players(sets, eventID) {
 
   for (var i = 0; i < sets.length; i++) {
     let set = sets[i];
-    if(set['round'] === losersRound || set['fullRoundText'] === 'Losers Quarter-Final' || set['fullRoundText'] === 'Losers Semi-Final' || set['fullRoundText'] === 'Losers Final') {
+    if(set['round'] === losersRound) {
+      let p1Handle, p2Handle;
+
+      if (set['slots'][0]['entrant'] === null) p1Handle = '';
+      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
+      else p1Handle = '';
+
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
+      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
+      else p2Handle = '';
+      
+      losers.push({
+        'player1':p1Handle,
+        'player2': p2Handle,
+        'player1score': 0,
+        'player1score': 0
+      });
+    }
+  }
+
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Losers Quarter-Final') {
+      let p1Handle, p2Handle;
+
+      if (set['slots'][0]['entrant'] === null) p1Handle = '';
+      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
+      else p1Handle = '';
+
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
+      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
+      else p2Handle = '';
+      
+      losers.push({
+        'player1':p1Handle,
+        'player2': p2Handle,
+        'player1score': 0,
+        'player1score': 0
+      });
+    }
+  }
+
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Losers Semi-Final') {
+      let p1Handle, p2Handle;
+
+      if (set['slots'][0]['entrant'] === null) p1Handle = '';
+      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
+      else p1Handle = '';
+
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
+      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
+      else p2Handle = '';
+      
+      losers.push({
+        'player1':p1Handle,
+        'player2': p2Handle,
+        'player1score': 0,
+        'player1score': 0
+      });
+    }
+  }
+
+  for (var i = 0; i < sets.length; i++) {
+    let set = sets[i];
+    if(set['fullRoundText'] === 'Losers Final') {
       let p1Handle, p2Handle;
 
       if (set['slots'][0]['entrant'] === null) p1Handle = '';
