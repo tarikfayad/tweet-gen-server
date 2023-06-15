@@ -618,8 +618,8 @@ async function formatTop8Players(sets, eventID) {
     if(set['fullRoundText'] === 'Winners Semi-Final' || set['fullRoundText'] === 'Winners Final' || set['fullRoundText'] === 'Grand Final') {
       let p1Handle, p2Handle;
 
-      if (set['slots'][0]['entrant']['name'] === null) p1Handle = '';
-      if (set['slots'][1]['entrant']['name'] === null) p2Handle = '';
+      if (set['slots'][0]['entrant'] === null) p1Handle = '';
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
       
       if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
       else p1Handle = '';
@@ -645,6 +645,9 @@ async function formatTop8Players(sets, eventID) {
     let set = sets[i];
     if(set['round'] === losersRound || set['fullRoundText'] === 'Losers Quarter-Final' || set['fullRoundText'] === 'Losers Semi-Final' || set['fullRoundText'] === 'Losers Final') {
       let p1Handle, p2Handle;
+
+      if (set['slots'][0]['entrant'] === null) p1Handle = '';
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
       
       if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
       else p1Handle = '';
