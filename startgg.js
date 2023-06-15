@@ -668,10 +668,10 @@ async function formatTop8Players(sets, eventID) {
   return [{
     'matches': [
       {
-        'winners': winners.reverse()
+        'winners': winners
       },
       {
-        'losers': losers.reverse()
+        'losers': losers
       }
     ]
   }];
