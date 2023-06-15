@@ -617,6 +617,9 @@ async function formatTop8Players(sets, eventID) {
     console.log(set);
     if(set['fullRoundText'] === 'Winners Semi-Final' || set['fullRoundText'] === 'Winners Final' || set['fullRoundText'] === 'Grand Final') {
       let p1Handle, p2Handle;
+
+      if (!set['slots'][0]['entrant']['name']) p1Handle = '';
+      if (!set['slots'][1]['entrant']['name']) p2Handle = '';
       
       if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
       else p1Handle = '';
