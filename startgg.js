@@ -619,12 +619,11 @@ async function formatTop8Players(sets, eventID) {
       let p1Handle, p2Handle;
 
       if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      
-      if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
+      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
       else p1Handle = '';
 
-      if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
+      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
       else p2Handle = '';
 
       winners.push({
@@ -647,13 +646,13 @@ async function formatTop8Players(sets, eventID) {
       let p1Handle, p2Handle;
 
       if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      
-      if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
+      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
       else p1Handle = '';
 
-      if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
+      if (set['slots'][1]['entrant'] === null) p2Handle = '';
+      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
       else p2Handle = '';
+      
       losers.push({
         'player1':p1Handle,
         'player2': p2Handle,
