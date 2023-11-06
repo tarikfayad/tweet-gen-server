@@ -60,6 +60,12 @@ async function parseChallongeMatches(matches, body) {
   console.log(body.button);
   let challongeNames;
   switch (body.button) {
+    case 'player-list':
+      var participants = await challonge.getPlayerList(body['organization'], body['tournament_slug']);
+      return [{
+        'message': "Today's Participants:\n\n" + participants
+      }];
+      break
     case 'starting-soon':
       return [{
         'message': 'Boutta start in about 30 minutes! 💪\n\n[EMBED LATEST REMINDER TWEET]'
@@ -193,7 +199,7 @@ async function parseChallongeMatches(matches, body) {
           'error': '⚠️ This command only works if the bracket is COMPLETED.'
         }];
       } else {
-        var finalResults = await challonge.getFinalResults(body['organization'], body['tournament_slug'])
+        var finalResults = await challonge.getFinalResults(body['organization'], body['tournament_slug']);
         challongeNames = await challonge.getGameAndTournamentName(body['organization'], body['tournament_slug']);
         gameName = challongeNames["gameName"];
         tournamentName = challongeNames["tournamentName"];

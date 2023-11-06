@@ -157,6 +157,20 @@ const getUsernamesAndScores = async function(organization, tournament, matches) 
     return handles;
 }
 
+const getPlayerList = async function(organization, tournament) {
+    const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '/participants.json?api_key=' + process.env.CHALLONGE_API_KEY);
+    var participants = response.data;
+    var toSort = [];
+
+    participants.forEach((item, i) => {
+        if (item['participant']['name'] !== null) {
+            toSort.push(item);
+        }
+    });
+
+    return toSort.sort();
+}
+
 const getFinalResults = async function(organization, tournament, matches) {
     console.log('Getting Tournament Results . . .');
 
@@ -246,5 +260,5 @@ function compareResults(player1, player2) {
 }
 
 module.exports = {
-    getGameAndTournamentName, isTournamentInProgress, getTwitterHandles, getUsernamesAndScores, getFinalResults, getMatches
+    getGameAndTournamentName, isTournamentInProgress, getTwitterHandles, getUsernamesAndScores, getFinalResults, getMatches, getPlayerList
 }
