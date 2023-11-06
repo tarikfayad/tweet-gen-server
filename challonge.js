@@ -163,8 +163,8 @@ const getPlayerList = async function(organization, tournament) {
     var toSort = [];
 
     participants.forEach((item, i) => {
-        if (item['participant']['name'] !== null) {
-            toSort.push(item);
+        if (item['participant']['display_name'] !== null) {
+            toSort.push(item['participant']['display_name']);
         }
     });
 
