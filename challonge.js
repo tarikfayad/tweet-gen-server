@@ -171,7 +171,7 @@ const getPlayerList = async function(organization, tournament) {
 
     console.log(toSort.sort());
 
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < toSort.length; i++) {
         let participant = toSort.sort()[i];
         players = players + participant + '\n';
     };
