@@ -161,6 +161,7 @@ const getPlayerList = async function(organization, tournament) {
     const response = await axiosAPI.get('tournaments/' + organization + '-' + tournament + '/participants.json?api_key=' + process.env.CHALLONGE_API_KEY);
     var participants = response.data;
     var toSort = [];
+    var players = '';
 
     participants.forEach((item, i) => {
         if (item['participant']['display_name'] !== null) {
@@ -170,7 +171,12 @@ const getPlayerList = async function(organization, tournament) {
 
     console.log(toSort.sort());
 
-    return toSort.sort();
+    for (var i = 0; i < 8; i++) {
+        let participant = toSort.sort()[i];
+        players = players + participant + '\n';
+    };
+
+    return players;
 }
 
 const getFinalResults = async function(organization, tournament, matches) {
