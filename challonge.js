@@ -168,6 +168,8 @@ const getPlayerList = async function(organization, tournament) {
         }
     });
 
+    console.log(toSort.sort());
+
     return toSort.sort();
 }
 
