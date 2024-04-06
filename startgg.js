@@ -602,7 +602,7 @@ async function formatTop8String(sets, eventID, shortCode) {
     }
   }
 
-  return 'Our #' + shortCode + ' Top 8 is set\n\nTop 8 Winners:\n' + '⚔️' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + '⚔️' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nTop 8 Losers:\n' + '⚔️' +losers[0][0] + ' vs ' + losers[0][1] + '\n' + '⚔️' + losers[1][0] + ' vs ' + losers[1][1] +'\n\nStream links in reply 👇';
+  return 'Our #' + shortCode + ' Top 8 is set!\n\nTop 8 Winners:\n' + '⚔️' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + '⚔️' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nTop 8 Losers:\n' + '⚔️' +losers[0][0] + ' vs ' + losers[0][1] + '\n' + '⚔️' + losers[1][0] + ' vs ' + losers[1][1] +'\n\nStream links in reply 👇';
 }
 
 async function formatTop8Players(sets, eventID) {
