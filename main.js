@@ -290,7 +290,7 @@ async function parseStartGGMatches(body) {
     case 'top-8':
       if (status === 'ACTIVE') {
         return [{
-          'message': await startgg.getTop8(body['tournament_slug'], startGGID)
+          'message': await startgg.getTop8(body['tournament_slug'], startGGID, body.game)
       }]
       } else {
         return [{

@@ -92,7 +92,7 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
       return information;
 }
 
-const getTop8 =  async function(slug, eventID) {
+const getTop8 =  async function(slug, eventID, shortCode) {
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
@@ -137,7 +137,7 @@ console.log('TOP 8 RESPONSE:');
 console.log(response.data);
 let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
 
-return await formatTop8String(sets, eventID);
+return await formatTop8String(sets, eventID, shortCode);
 }
 
 const getTop8Players =  async function(slug, eventID) {
@@ -565,7 +565,7 @@ async function formatResultsString(standings, numEntrants, eventID) {
   return results;
 }
 
-async function formatTop8String(sets, eventID) {
+async function formatTop8String(sets, eventID, shortCode) {
   console.log('Getting Tournament Top 8 from Startgg. . .');
 
   let losersRound;
@@ -602,7 +602,7 @@ async function formatTop8String(sets, eventID) {
     }
   }
 
-  return 'Our ' + shortCode + 'Top 8 is set\n\nTop 8 Winners:\n' + '⚔️' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + '⚔️' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nTop 8 Losers:\n' + '⚔️' +losers[0][0] + ' vs ' + losers[0][1] + '\n' + '⚔️' + losers[1][0] + ' vs ' + losers[1][1] +'\n\nStream links in reply 👇';
+  return 'Our #' + shortCode + ' Top 8 is set\n\nTop 8 Winners:\n' + '⚔️' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + '⚔️' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nTop 8 Losers:\n' + '⚔️' +losers[0][0] + ' vs ' + losers[0][1] + '\n' + '⚔️' + losers[1][0] + ' vs ' + losers[1][1] +'\n\nStream links in reply 👇';
 }
 
 async function formatTop8Players(sets, eventID) {
