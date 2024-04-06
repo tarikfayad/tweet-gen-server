@@ -954,6 +954,8 @@ function getGameNameFromShortCode(shortCode) {
 				return 'DNF Duel';
 			case 'GBVS':
 				return 'Granblue Fantasy: Versus';
+      case 'GBVSR':
+        return 'Granblue Fantasy Versus: Rising';
 			case 'P4AU':
 				return 'Persona 4 Arena Ultimax';
 			case 'GGXRD':
@@ -976,6 +978,9 @@ function getGameNameFromShortCode(shortCode) {
 				return 'Ultimate Marvel vs. Capcom 3';
 			case 'UNICLR':
 				return 'UNDER NIGHT IN-BIRTH Exe:Late[cl-r]';
+      case 'UNISC':
+      case 'UNI2':
+        return 'UNDER NIGHT IN-BIRTH II Sys:Celes';
 			case 'USF4':
 				return 'Ultra Street Fighter IV';
 			case 'SF6':
