@@ -602,7 +602,7 @@ async function formatTop8String(sets, eventID) {
     }
   }
 
-  return '🚨 TOP 8 HERE WE GO! 🚨\n\nw:\n' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nl:\n' + losers[0][0] + ' vs ' + losers[0][1] + '\n' + losers[1][0] + ' vs ' + losers[1][1] +'\n\n📺 https://twitch.tv/ImpurestClub';
+  return 'Our ' + shortCode + 'Top 8 is set\n\nTop 8 Winners:\n' + '⚔️' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + '⚔️' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nTop 8 Losers:\n' + '⚔️' +losers[0][0] + ' vs ' + losers[0][1] + '\n' + '⚔️' + losers[1][0] + ' vs ' + losers[1][1] +'\n\nStream links in reply 👇';
 }
 
 async function formatTop8Players(sets, eventID) {
@@ -630,7 +630,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     } else if (set['fullRoundText'] === 'Losers Quarter-Final') {
       if(!losersRoundSet) {
@@ -659,7 +659,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     }
   }
@@ -683,7 +683,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     }
   }
@@ -705,7 +705,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     }
   }
@@ -727,7 +727,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     }
   }
@@ -749,7 +749,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     }
   }
@@ -771,7 +771,7 @@ async function formatTop8Players(sets, eventID) {
         'player1':p1Handle,
         'player2': p2Handle,
         'player1score': 0,
-        'player1score': 0
+        'player2score': 0
       });
     }
   }
