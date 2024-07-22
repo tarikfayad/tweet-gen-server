@@ -557,8 +557,31 @@ async function formatResultsString(standings, numEntrants, eventID) {
     for (var i = 0; i < 8; i++) {
       let participant = standings[i];
       let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
-      let placement = participant['placement'].toString();
-      results = results + placement + '. ' + handle + '\n';
+      let placement = participant['placement'];
+      let placementString;
+      switch (placement) {
+        case 1:
+          placementString = '🏆';
+          break;
+        case 2:
+          placementString = '🥈';
+          break;
+        case 3:
+          placementString = '🥉';
+          break;
+        case 4:
+          placementString = '4️⃣';
+          break;
+        case 5:
+          placementString = '5️⃣';
+          break;
+        case 7:
+          placementString = '7️⃣';
+          break;
+        default:
+          break;
+      }
+      results = results + placementString + '. ' + handle + '\n';
     }
   }
 
