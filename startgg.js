@@ -581,7 +581,7 @@ async function formatResultsString(standings, numEntrants, eventID) {
         default:
           break;
       }
-      results = results + placementString + '. ' + handle + '\n';
+      results = results + placementString + ' ' + handle + '\n';
     }
   }
 
