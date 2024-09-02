@@ -650,7 +650,8 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
 
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  console.log(response)
+  console.log(response.data)
+  console.log(response.data.errors)
 }
 
 const getEventStatus = async function(slug, eventID) {
