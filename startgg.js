@@ -623,49 +623,36 @@ return status;
 async function formatResultsString(standings, numEntrants, eventID) {
   console.log('Getting Tournament Results . . .');
 
-  let results = '';
-  let topThree = ['🏆', '🥈', '🥉'];
+  const results = [];
+  const topThree = ['🏆', '🥈', '🥉'];
+
+  // Define a map for placements to emojis
+  const placementMap = {
+    1: '🏆',
+    2: '🥈',
+    3: '🥉',
+    4: '4️⃣',
+    5: '5️⃣',
+    7: '7️⃣'
+  };
 
   // Return top 3 if there are less than 16 entries
-  if(numEntrants < 16) {
-    for (var i = 0; i < 3; i++) {
-      let participant = standings[i];
-      let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
-      results = results + topThree[i] + ' ' + handle + '\n';
+  if (numEntrants < 16) {
+    for (let i = 0; i < 3; i++) {
+      const participant = standings[i];
+      const handle = await getPlayerTwitterHandle(participant.entrant.name, eventID);
+      results.push(`${topThree[i]} ${handle}`);
     }
   } else {
-    for (var i = 0; i < 8; i++) {
-      let participant = standings[i];
-      let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
-      let placement = participant['placement'];
-      let placementString;
-      switch (placement) {
-        case 1:
-          placementString = '🏆';
-          break;
-        case 2:
-          placementString = '🥈';
-          break;
-        case 3:
-          placementString = '🥉';
-          break;
-        case 4:
-          placementString = '4️⃣';
-          break;
-        case 5:
-          placementString = '5️⃣';
-          break;
-        case 7:
-          placementString = '7️⃣';
-          break;
-        default:
-          break;
-      }
-      results = results + placementString + ' ' + handle + '\n';
+    for (let i = 0; i < 8; i++) {
+      const participant = standings[i];
+      const handle = await getPlayerTwitterHandle(participant.entrant.name, eventID);
+      const placementString = placementMap[participant.placement] || ''; // Default to empty string if placement is not mapped
+      results.push(`${placementString} ${handle}`);
     }
   }
 
-  return results;
+  return results.join('\n');
 }
 
 async function formatTop8String(sets, eventID, shortCode) {
