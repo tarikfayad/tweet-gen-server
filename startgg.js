@@ -634,8 +634,8 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
   }
 `,
     variables: {
-      "setID": setID,
-      "winnerID": winnerID,
+      "setId": setID,
+      "winnerId": winnerID,
       "gameData": gameArray
   }
   });
