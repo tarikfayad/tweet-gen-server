@@ -601,7 +601,7 @@ const getStreamQueue = async function(tourneySlug){
 
 const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
 
-  let gameNumber = 0
+  let gameNumber = 1
   let gameArray =[]
 
   for (let i = 0; i < p1Score; i++) {
