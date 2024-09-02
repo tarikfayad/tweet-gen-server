@@ -362,7 +362,7 @@ async function parseStartGGMatches(body) {
       if (status === 'COMPLETED') {
         var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
       return [{
-        'message': tournamentName + ' Results:\n\n' + finalResults + '\nBracket: ' + body.bracket + '\nVOD:'
+        'message': tournamentName + ' Results:\n\n' + finalResults + '\n\nBracket: ' + body.bracket + '\nVOD:'
       }];
       } else {
         return [{
