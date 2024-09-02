@@ -549,10 +549,12 @@ const getStreamQueue = async function(tourneySlug){
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
   let sets = response.data['data']['tournament']['streamQueue'][0]['sets'];
-  console.log(sets)
   let formatedSets =[];
   
   sets.forEach(function(set){
+    console.log(set['slots'][0])
+    console.log(set['slots'][1])
+    
     let setID = set['id'];
     let round = set['fullRoundText']
 
