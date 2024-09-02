@@ -554,6 +554,7 @@ const getStreamQueue = async function(tourneySlug){
   
   sets.forEach(function(set){
     let setID = set['id'];
+    let round = set['fullRoundText']
 
     let player1FullString = set['slots'][0]['entrant']['name']
     let player1StringParts = player1FullString.split('|');
@@ -567,6 +568,7 @@ const getStreamQueue = async function(tourneySlug){
 
     let formatedSet = {
       'id': setID,
+      'round': round,
       'player1Tag': player1Tag,
       'player1Name': player1Name,
       'player2Tag': player2Tag,
