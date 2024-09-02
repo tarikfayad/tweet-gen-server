@@ -606,7 +606,7 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
 
   for (let i = 0; i < p1Score; i++) {
     let game = {
-      winnerID: p1ID,
+      winnerId: p1ID,
       gameNum: gameNumber
     };
     gameArray.push(game);
@@ -615,7 +615,7 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
 
   for (let i = 0; i < p2Score; i++) {
     let game = {
-      winnerID: p2ID,
+      winnerId: p2ID,
       gameNum: gameNumber
     };
     gameArray.push(game);
