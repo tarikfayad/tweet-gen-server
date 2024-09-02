@@ -548,6 +548,7 @@ const getStreamQueue = async function(tourneySlug){
 
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  console.log(response.data)
   let sets = response.data['data']['tournament']['streamQueue'][0]['sets'];
   let formatedSets =[];
   
