@@ -551,7 +551,7 @@ async function formatResultsString(standings, numEntrants, eventID) {
     for (var i = 0; i < 3; i++) {
       let participant = standings[i];
       let handle = await getPlayerTwitterHandle(participant['entrant']['name'], eventID);
-      results = results + topThree[i] + ' ' + '@' + handle + '\n';
+      results = results + topThree[i] + ' ' + handle + '\n';
     }
   } else {
     for (var i = 0; i < 8; i++) {
