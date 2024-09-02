@@ -623,7 +623,7 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
   }
 
   var data = JSON.stringify({
-    mutation: `mutation ReportBracketSet($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
+    query: `mutation ReportBracketSet($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
     reportBracketSet(setId: $setId, winnerId: $winnerId, gameData: $gameData) {
       id
       winnerId
