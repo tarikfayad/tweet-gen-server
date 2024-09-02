@@ -269,6 +269,10 @@ async function parseStartGGMatches(body) {
     return await startgg.getStreamQueue(body['tournament_slug'])
   }
 
+  if (body.button === 'update-startgg') {
+    return await startgg.reportSet(body.setID, body.winnerID, body.p1ID, body.p1Score, body.p2ID, body.p2Score)
+  }
+
   let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
   gameName = startGGNames["gameName"];
   tournamentName = startGGNames["tournamentName"];

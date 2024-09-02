@@ -527,6 +527,7 @@ const getStreamQueue = async function(tourneySlug){
         fullRoundText
         slots {
           entrant {
+            id
             name
           }
         }
@@ -555,17 +556,19 @@ const getStreamQueue = async function(tourneySlug){
     let setID = set['id'];
     let round = set['fullRoundText']
 
-    let player1Tag, player1Name;
-    let player2Tag, player2Name;
+    let player1Tag, player1Name, player1ID;
+    let player2Tag, player2Name, player2ID;
 
     if(set['slots'][0]['entrant']) {
       let player1FullString = set['slots'][0]['entrant']['name']
       let player1StringParts = player1FullString.split('|');
       player1Tag = player1StringParts[0].trim();
       player1Name = player1StringParts[1].trim();
+      player1ID = set['slots'][0]['entrant']['id'];
     } else {
       player1Tag = '';
       player1Name = '??';
+      player1ID = 0;
     }
 
     if(set['slots'][1]['entrant']) {
@@ -573,9 +576,11 @@ const getStreamQueue = async function(tourneySlug){
       let player2StringParts = player2FullString.split('|');
       player2Tag = player2StringParts[0].trim();
       player2Name = player2StringParts[1].trim();
+      player2ID = set['slots'][0]['entrant']['id'];
     } else {
       player2Tag = '';
       player2Name = '??';
+      player2ID = 0;
     }
 
     let formatedSet = {
@@ -583,13 +588,69 @@ const getStreamQueue = async function(tourneySlug){
       'round': round,
       'player1Tag': player1Tag,
       'player1Name': player1Name,
+      'player1ID': player1ID,
       'player2Tag': player2Tag,
-      'player2Name': player2Name
+      'player2Name': player2Name,
+      'player2ID': player2ID,
     }
 
     formatedSets.push(formatedSet)
   });
   return formatedSets;
+}
+
+const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
+
+  let gameNumber = 0
+  let gameArray =[]
+
+  for (let i = 0; i < p1Score; i++) {
+    let game = {
+      winnerID: p1ID,
+      gameNumber: gameNumber
+    };
+    gameArray.push(game);
+    gameNumber++;
+  }
+
+  for (let i = 0; i < p2Score; i++) {
+    let game = {
+      winnerID: p2ID,
+      gameNumber: gameNumber
+    };
+    gameArray.push(game);
+    gameNumber++;
+  }
+
+  var data = JSON.stringify({
+    mutation: `mutation ReportBracketSet($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
+    reportBracketSet(setId: $setId, winnerId: $winnerId, gameData: $gameData) {
+      id
+      winnerId
+      gameData {
+        winnerId
+        gameNum
+      }
+    }
+  }
+`,
+    variables: {
+      "setID": setID,
+      "winnerID": winnerID,
+      "gameData": gameArray
+  }
+  });
+  
+  var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  console.log(response)
 }
 
 const getEventStatus = async function(slug, eventID) {
@@ -1163,5 +1224,5 @@ function getHashtags(game) {
 }
 
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset, getStreamQueue
+    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset, getStreamQueue, reportSet
 }
