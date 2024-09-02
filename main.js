@@ -270,6 +270,10 @@ async function parseStartGGMatches(body) {
   startGGID = startGGNames["id"];
   let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
 
+  if (body.button === 'stream-queue') {
+    return await startgg.getStreamQueue(body['tournament_slug'])
+  }
+
   switch (body.button) {
     case 'starting-soon':
       return [{
@@ -396,12 +400,16 @@ function getHashtags(game) {
   switch (game) {
     case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy'
+    case 'Granblue Fantasy Versus: Rising':
+      return '#GBVSR #GranblueFantasy'
     case 'Under Night In-Birth Exe:Late[cl-r]':
       return '#UNICLR #inbirth'
+    case 'Under Night In-Birth II Sys:Celes':
+      return '#UNISC #UNI2 #inbirth'
     case 'Guilty Gear -Strive-':
       return '#GGST #GuiltyGear'
     case 'Melty Blood: Type Lumina':
-      return '#MBTL #MBTL_Tournament'
+      return '#MBTL #MeltyBlood'
     case 'BlazBlue: Central Fiction':
       return '#BBCF #BlazBlue'
     case 'Guilty Gear XX Accent Core':

@@ -471,7 +471,7 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
                   id
                   prefix
                   gamerTag
-                  user {
+                  user {  
                     authorizations {
                       type
                       externalUsername
@@ -510,6 +510,71 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
     else handle = '@' + handle;
   }
   return handle;
+}
+
+const getStreamQueue = async function(tourneySlug){
+  var data = JSON.stringify({
+    query: `query StreamQueueOnTournament($tourneySlug: String!) {
+  tournament(slug: $tourneySlug) {
+    id
+    streamQueue {
+      stream {
+        streamSource
+        streamName
+      }
+      sets {
+        id
+        fullRoundText
+        slots {
+          entrant {
+            name
+          }
+        }
+      }
+    }
+  }
+}`,
+    variables: {
+      "tourneySlug":tourneySlug
+  }
+  });
+  
+  var config = {
+    headers: { 
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  let sets = response.data['data']['tournament']['streamQueue'][0]['sets'];
+  let formatedSets =[];
+  
+  sets.forEach(function(set){
+    let setID = set['id'];
+
+    let player1FullString = set['slots'][0]['entrant']['name']
+    let player1StringParts = player1FullString.split('|');
+    let player1Tag = player1StringParts[0].trim();
+    let player1Name = player1StringParts[1].trim();
+
+    let player2FullString = set['slots'][1]['entrant']['name']
+    let player2StringParts = player2FullString.split('|');
+    let player2Tag = player2StringParts[0].trim();
+    let player2Name = player2StringParts[1].trim();
+
+    let formatedSet = {
+      'id': setID,
+      'player1Tag': player1Tag,
+      'player1Name': player1Name,
+      'player2Tag': player2Tag,
+      'player2Name': player2Name
+    }
+
+    formatedSets.push(formatedSet)
+  });
+  return formatedSets;
 }
 
 const getEventStatus = async function(slug, eventID) {
@@ -1039,5 +1104,5 @@ function getHashtags(game) {
 }
 
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset
+    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset, getStreamQueue
 }
