@@ -556,15 +556,28 @@ const getStreamQueue = async function(tourneySlug){
     let setID = set['id'];
     let round = set['fullRoundText']
 
-    let player1FullString = set['slots'][0]['entrant']['name']
-    let player1StringParts = player1FullString.split('|');
-    let player1Tag = player1StringParts[0].trim();
-    let player1Name = player1StringParts[1].trim();
+    let player1Tag, player1Name;
+    let player2Tag, player2Name;
 
-    let player2FullString = set['slots'][1]['entrant']['name']
-    let player2StringParts = player2FullString.split('|');
-    let player2Tag = player2StringParts[0].trim();
-    let player2Name = player2StringParts[1].trim();
+    if(set['slots'][0]) {
+      let player1FullString = set['slots'][0]['entrant']['name']
+      let player1StringParts = player1FullString.split('|');
+      player1Tag = player1StringParts[0].trim();
+      player1Name = player1StringParts[1].trim();
+    } else {
+      player1Tag = '';
+      player1Name = '';
+    }
+
+    if(set['slots'][1]) {
+      let player2FullString = set['slots'][0]['entrant']['name']
+      let player2StringParts = player2FullString.split('|');
+      player2Tag = player2StringParts[0].trim();
+      player2Name = player2StringParts[1].trim();
+    } else {
+      player2Tag = '';
+      player2Name = '';
+    }
 
     let formatedSet = {
       'id': setID,
