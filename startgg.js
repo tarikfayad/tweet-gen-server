@@ -705,7 +705,18 @@ async function formatTop8String(sets, eventID, shortCode) {
     }
   }
 
-  return 'Our #' + shortCode + ' Top 8 is set!\n\nTop 8 Winners:\n' + '⚔️' + winners[0][0] + ' vs ' + winners[0][1] + '\n' + '⚔️' + winners[1][0] + ' vs ' + winners[1][1] + '\n\nTop 8 Losers:\n' + '⚔️' +losers[0][0] + ' vs ' + losers[0][1] + '\n' + '⚔️' + losers[1][0] + ' vs ' + losers[1][1] +'\n\nStream links in reply 👇';
+  return `Our #${shortCode} Top 8 is set!
+  
+  Top 8 Winners:
+  ⚔️ ${winners[0][0]} vs ${winners[0][1]}
+  ⚔️ ${winners[1][0]} vs ${winners[1][1]}
+  
+  Top 8 Losers:
+  ⚔️ ${losers[0][0]} vs ${losers[0][1]}
+  ⚔️ ${losers[1][0]} vs ${losers[1][1]}
+  
+  Stream links in reply 👇`;
+
 }
 
 async function formatTop8Players(sets, eventID) {
@@ -910,7 +921,14 @@ async function formatTop4String(sets, eventID, gameName) {
 
   console.log(handles);
 
-  return "We're in the Top 4 home stretch!\n\nFirst up ➡️ " + handles[0] + " vs " + handles[1] + "\n\n" + getHashtags(gameName) + "\n\n" + "📺 https://twitch.tv/ImpurestClub";
+  return `We're in the Top 4 home stretch!
+  
+  First up ➡️ ${handles[0]} vs ${handles[1]}
+  
+  ${getHashtags(gameName)}
+  
+  📺 https://twitch.tv/ImpurestClub`;
+
 }
 
 async function formatLosersSemifinalsString(sets, eventID, gameName, matcherino) {
@@ -929,7 +947,15 @@ async function formatLosersSemifinalsString(sets, eventID, gameName, matcherino)
 
   console.log(handles);
 
-  return "⏬ Losers Semifinals ⏬\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+  return `⏬ Losers Semifinals ⏬
+  
+  🥊 ${handles[0]} vs ${handles[1]}
+  
+  💰 ${matcherino}
+  📺 https://twitch.tv/ImpurestClub
+  
+  ${getHashtags(gameName)}`;
+
 }
 
 async function formatLosersFinalString(sets, eventID, gameName, matcherino) {
@@ -948,7 +974,15 @@ async function formatLosersFinalString(sets, eventID, gameName, matcherino) {
 
   console.log(handles);
 
-  return "⚠️ Losers Finals ⚠️\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+  return `⚠️ Losers Finals ⚠️
+  
+  🥊 ${handles[0]} vs ${handles[1]}
+  
+  💰 ${matcherino}
+  📺 https://twitch.tv/ImpurestClub
+  
+  ${getHashtags(gameName)}`;
+
 }
 
 async function formatGrandFinalString(sets, eventID, gameName, matcherino) {
@@ -967,7 +1001,15 @@ async function formatGrandFinalString(sets, eventID, gameName, matcherino) {
 
   console.log(handles);
 
-  return "🚨 GRAND FINALS! 🚨\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+  return `🚨 GRAND FINALS! 🚨
+  
+  🥊 ${handles[0]} vs ${handles[1]}
+  
+  💰 ${matcherino}
+  📺 https://twitch.tv/ImpurestClub
+  
+  ${getHashtags(gameName)}`;
+
 }
 
 async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) {
@@ -986,7 +1028,15 @@ async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) 
 
   console.log(handles);
 
-  return "WE HAVE A RESET!\n\n🥊 " + handles[0] + " vs " + handles[1] + "\n\n💰 " + matcherino + "\n📺 https://twitch.tv/ImpurestClub\n\n" + getHashtags(gameName);
+  return `WE HAVE A RESET!
+  
+  🥊 ${handles[0]} vs ${handles[1]}
+  
+  💰 ${matcherino}
+  📺 https://twitch.tv/ImpurestClub
+  
+  ${getHashtags(gameName)}`;
+
 }
 
 // Helper Methods
@@ -1027,17 +1077,24 @@ function getSetsWithID(id, eventArray) {
 }
 
 function compareGameStrings(shortCode, gameName) {
-    console.log('GAME NAMES!');
-    console.log(shortCode);
-    console.log(gameName);
-    let gameString = getGameNameFromShortCode(shortCode).replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
-    console.log(gameString);
-    let escapedGameName = gameName.replace(/\s/g,'-').replace(':', '-').replace('[', '-').replace(']', '-').replace('--', '-');
-    console.log(escapedGameName);
+  
+  console.log('GAME NAMES!');
+  console.log(shortCode);
+  console.log(gameName);
+  
+  let gameString = sanitizeString(getGameNameFromShortCode(shortCode)).toUpperCase();
+  let escapedGameName = sanitizeString(gameName).toUpperCase();
 
-    if(gameString.toUpperCase().includes(escapedGameName.toUpperCase()) || escapedGameName.toUpperCase().includes(gameString.toUpperCase())) return true;
-    else return false;
+  console.log(gameString);
+  console.log(escapedGameName);
 
+  return gameString.includes(escapedGameName) || escapedGameName.includes(gameString);
+}
+
+function sanitizeString(str) {
+  return str.replace(/\s/g, '-')
+            .replace(/[:\[\]]/g, '-') // Replace colons and square brackets in one pass
+            .replace(/--+/g, '-');    // Replace multiple dashes with a single dash
 }
 
 // function extractGame (url) {
