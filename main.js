@@ -264,15 +264,16 @@ async function parseStartGGMatches(body) {
   console.log('BUTTON:');
   console.log(body.button);
   console.log(body.game);
+
+  if (body.button === 'stream-queue') {
+    return await startgg.getStreamQueue(body['tournament_slug'])
+  }
+
   let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
   gameName = startGGNames["gameName"];
   tournamentName = startGGNames["tournamentName"];
   startGGID = startGGNames["id"];
   let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
-
-  if (body.button === 'stream-queue') {
-    return await startgg.getStreamQueue(body['tournament_slug'])
-  }
 
   switch (body.button) {
     case 'starting-soon':
