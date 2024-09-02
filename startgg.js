@@ -566,7 +566,7 @@ const getStreamQueue = async function(tourneySlug){
       player1Name = player1StringParts[1].trim();
     } else {
       player1Tag = '';
-      player1Name = '';
+      player1Name = '??';
     }
 
     if(set['slots'][1]) {
@@ -576,7 +576,7 @@ const getStreamQueue = async function(tourneySlug){
       player2Name = player2StringParts[1].trim();
     } else {
       player2Tag = '';
-      player2Name = '';
+      player2Name = '??';
     }
 
     let formatedSet = {
