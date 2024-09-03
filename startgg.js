@@ -560,12 +560,9 @@ const getStreamQueue = async function(tourneySlug){
     let player2Tag, player2Name, player2ID;
 
     if(set['slots'][0]['entrant']) {
-
-      console.log('PLAYERS 1')
-      console.log(set['slots'][0]['entrant'])
-
       let player1FullString = set['slots'][0]['entrant']['name']
       let player1StringParts = player1FullString.split('|');
+
       if (player1StringParts.length === 2) {
         player1Tag = player1StringParts[0].trim();
         player1Name = player1StringParts[1].trim();
@@ -581,11 +578,6 @@ const getStreamQueue = async function(tourneySlug){
     }
 
     if(set['slots'][1]['entrant']) {
-
-      console.log('PLAYERS 2')
-      console.log(set['slots'][1]['entrant'])
-
-
       let player2FullString = set['slots'][1]['entrant']['name']
       let player2StringParts = player2FullString.split('|');
 
@@ -645,6 +637,7 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
 
   console.log('SET ID')
   console.log(setID)
+  console.log(gameArray)
 
   var data = JSON.stringify({
     query: `mutation ReportBracketSet($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
