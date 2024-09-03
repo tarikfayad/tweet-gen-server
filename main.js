@@ -270,6 +270,7 @@ async function parseStartGGMatches(body) {
   }
 
   if (body.button === 'update-startgg') {
+    console.log('Start Body: ' + body);
     return await startgg.reportSet(body.setID, body.winnerID, body.p1ID, body.p1Score, body.p2ID, body.p2Score)
   }
 
