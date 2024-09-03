@@ -559,17 +559,11 @@ const getStreamQueue = async function(tourneySlug){
     let player1Tag, player1Name, player1ID;
     let player2Tag, player2Name, player2ID;
 
-    console.log('PLAYERS')
-    console.log(set['slots'][0]['entrant'])
-
     if(set['slots'][0]['entrant']) {
-      let player1FullString = set['slots'][0]['entrant']['name'];
-      let player1Tag, player1Name;
 
-      console.log('PLAYERS')
+      console.log('PLAYERS 1')
       console.log(set['slots'][0]['entrant'])
-    
-      if(set['slots'][0]['entrant']) {
+
       let player1FullString = set['slots'][0]['entrant']['name']
       let player1StringParts = player1FullString.split('|');
       player1Tag = player1StringParts[0].trim();
@@ -582,6 +576,11 @@ const getStreamQueue = async function(tourneySlug){
     }
 
     if(set['slots'][1]['entrant']) {
+
+      console.log('PLAYERS 2')
+      console.log(set['slots'][1]['entrant'])
+
+
       let player2FullString = set['slots'][1]['entrant']['name']
       let player2StringParts = player2FullString.split('|');
       player2Tag = player2StringParts[0].trim();
