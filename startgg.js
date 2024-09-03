@@ -637,6 +637,8 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
 
   console.log('SET ID')
   console.log(setID)
+  console.log(p1ID)
+  console.log(p2ID)
   console.log(gameArray)
 
   var data = JSON.stringify({
