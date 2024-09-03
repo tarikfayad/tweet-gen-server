@@ -562,6 +562,9 @@ const getStreamQueue = async function(tourneySlug){
     if(set['slots'][0]['entrant']) {
       let player1FullString = set['slots'][0]['entrant']['name'];
       let player1Tag, player1Name;
+
+      console.log('PLAYERS')
+      console.log(set['slots'][0]['entrant'])
     
       if (player1FullString.includes('|')) {
         let player1StringParts = player1FullString.split('|');
@@ -598,7 +601,7 @@ const getStreamQueue = async function(tourneySlug){
       player2Name = '??';
       player2ID = 0;
     }
-        
+
     let formatedSet = {
       'id': setID,
       'round': round,
