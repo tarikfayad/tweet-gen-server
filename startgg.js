@@ -559,7 +559,7 @@ const getStreamQueue = async function(tourneySlug){
     let player1Tag, player1Name, player1ID;
     let player2Tag, player2Name, player2ID;
 
-    if(set['slots'][0]['entrant']) {
+    if(set['slots'][0]['entrant'] != null) {
       let player1FullString = set['slots'][0]['entrant']['name']
       let player1StringParts = player1FullString.split('|');
 
@@ -577,7 +577,7 @@ const getStreamQueue = async function(tourneySlug){
       player1ID = 0;
     }
 
-    if(set['slots'][1]['entrant']) {
+    if(set['slots'][1]['entrant'] != null) {
       let player2FullString = set['slots'][1]['entrant']['name']
       let player2StringParts = player2FullString.split('|');
 
@@ -589,7 +589,7 @@ const getStreamQueue = async function(tourneySlug){
         player2Name = player2FullString;
       }
 
-      player2ID = set['slots'][0]['entrant']['id'];
+      player2ID = set['slots'][1]['entrant']['id'];
     } else {
       player2Tag = '';
       player2Name = '??';
