@@ -555,6 +555,10 @@ const getStreamQueue = async function(tourneySlug){
   sets.forEach(function(set){
     let setID = set['id'];
     let round = set['fullRoundText']
+    
+    if (round.toLowerCase().endsWith("final")) {
+      round += "s";
+    }
 
     let player1Tag, player1Name, player1ID;
     let player2Tag, player2Name, player2ID;
@@ -634,12 +638,6 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
     gameArray.push(game);
     gameNumber++;
   }
-
-  console.log('SET ID')
-  console.log(setID)
-  console.log(p1ID)
-  console.log(p2ID)
-  console.log(gameArray)
 
   var data = JSON.stringify({
     query: `mutation ReportBracketSet($setId: ID!, $winnerId: ID, $gameData: [BracketSetGameDataInput]) {
