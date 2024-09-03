@@ -560,29 +560,45 @@ const getStreamQueue = async function(tourneySlug){
     let player2Tag, player2Name, player2ID;
 
     if(set['slots'][0]['entrant']) {
-      let player1FullString = set['slots'][0]['entrant']['name']
-      let player1StringParts = player1FullString.split('|');
-      player1Tag = player1StringParts[0].trim();
-      player1Name = player1StringParts[1].trim();
+      let player1FullString = set['slots'][0]['entrant']['name'];
+      let player1Tag, player1Name;
+    
+      if (player1FullString.includes('|')) {
+        let player1StringParts = player1FullString.split('|');
+        player1Tag = player1StringParts[0].trim();
+        player1Name = player1StringParts[1].trim();
+      } else {
+        player1Tag = player1FullString.trim();
+        player1Name = '';  // Or set it to player1Tag if you want the same value
+      }
+    
       player1ID = set['slots'][0]['entrant']['id'];
     } else {
       player1Tag = '';
       player1Name = '??';
       player1ID = 0;
     }
-
+    
     if(set['slots'][1]['entrant']) {
-      let player2FullString = set['slots'][1]['entrant']['name']
-      let player2StringParts = player2FullString.split('|');
-      player2Tag = player2StringParts[0].trim();
-      player2Name = player2StringParts[1].trim();
-      player2ID = set['slots'][0]['entrant']['id'];
+      let player2FullString = set['slots'][1]['entrant']['name'];
+      let player2Tag, player2Name;
+    
+      if (player2FullString.includes('|')) {
+        let player2StringParts = player2FullString.split('|');
+        player2Tag = player2StringParts[0].trim();
+        player2Name = player2StringParts[1].trim();
+      } else {
+        player2Tag = player2FullString.trim();
+        player2Name = '';  // Or set it to player2Tag if you want the same value
+      }
+    
+      player2ID = set['slots'][1]['entrant']['id'];
     } else {
       player2Tag = '';
       player2Name = '??';
       player2ID = 0;
     }
-
+        
     let formatedSet = {
       'id': setID,
       'round': round,
