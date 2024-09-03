@@ -567,9 +567,9 @@ const getStreamQueue = async function(tourneySlug){
       let player1FullString = set['slots'][0]['entrant']['name']
       let player1StringParts = player1FullString.split('|');
 
-      if (player1StringParts.length === 2) {
-        player1Tag = player1StringParts[0].trim();
-        player1Name = player1StringParts[1].trim();
+      if (player1StringParts.length > 1) {
+        player1Name = player1StringParts[player1StringParts.length - 1].trim();
+        player1Tag = mergeSponsorTags(player1StringParts.pop());
       } else {
         player1Tag = ''
         player1Name = player1FullString;
@@ -585,9 +585,10 @@ const getStreamQueue = async function(tourneySlug){
       let player2FullString = set['slots'][1]['entrant']['name']
       let player2StringParts = player2FullString.split('|');
 
-      if (player2StringParts.length === 2) {
-        player2Tag = player2StringParts[0].trim();
-        player2Name = player2StringParts[1].trim();
+      if (player2StringParts.length > 1) {
+        player2Name = player2StringParts[player2StringParts.length - 1].trim();
+        player2Tag = mergeSponsorTags(player2StringParts.pop());
+        
       } else {
         player2Tag = ''
         player2Name = player2FullString;
@@ -614,6 +615,17 @@ const getStreamQueue = async function(tourneySlug){
     formatedSets.push(formatedSet)
   });
   return formatedSets;
+}
+
+function mergeSponsorTags(sponsors) {
+  let sponsorTags = '';
+  for (let i = 0; i < sponsors.length; i++) {
+    const tag = sponsors[i];
+    if (i === sponsors.length - 1) {sponsorTags = sponsorTags + tag;}
+    else {sponsorTags = sponsorTags + tag + ' | ';}
+  }
+
+  return sponsorTags;
 }
 
 const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
