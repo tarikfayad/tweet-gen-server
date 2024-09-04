@@ -1,7 +1,7 @@
 {
-  "name": "tweet-gen-server",
+  "name": "wasd-streamcontrol-server",
   "version": "1.0.0",
-  "description": "The server for WASD's Tweet Generator",
+  "description": "The server for WASD's StreamControl",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
