@@ -132,11 +132,59 @@ function getStandingsWithID(id, eventArray) {
     }
   }
 
+  function mergeSponsorTags(sponsors) {
+    let sponsorTags = '';
+    for (let i = 0; i < sponsors.length; i++) {
+      const tag = sponsors[i];
+      if (i === sponsors.length - 1) {sponsorTags = sponsorTags + tag;}
+      else {sponsorTags = sponsorTags + tag + ' | ';}
+    }
+  
+    return sponsorTags;
+  }
+
+  function extractPlayerInfo(entrant) {
+    let name, tag, id;
+    
+    if (entrant != null) {
+        let fullString = entrant['name'];
+        let stringParts = fullString.split('|');
+        
+        if (stringParts.length > 1) {
+            name = stringParts[stringParts.length - 1].trim();
+            let tags = stringParts.slice(0, -1).map(part => part.trim());
+            tag = mergeSponsorTags(tags);
+        } else {
+            tag = '';
+            name = fullString;
+        }
+        
+        id = entrant['id'];
+    } else {
+        tag = '';
+        name = '??';
+        id = 0;
+    }
+    
+    return { name, tag, id };
+}
+
+
+  function logError(error) {
+    console.log('Error status:', error.response.status); // e.g., 503
+    console.log('Error data:', error.response.data); // Error data from the response
+    console.log('Error headers:', error.response.headers);
+    return 'An error occurred while processing your request (' + error.response.status + '). Please try again later.';
+  }
+
   module.exports = {
     getStandingsWithID,
     getNumEntrants,
     getStatusWithID,
     getSetsWithID,
     compareGameStrings,
-    getHashtags
+    getHashtags,
+    extractPlayerInfo,
+    mergeSponsorTags,
+    logError
   };
