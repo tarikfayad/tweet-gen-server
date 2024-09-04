@@ -1230,14 +1230,18 @@ function getHashtags(game) {
   switch (game) {
     case 'Granblue Fantasy: Versus':
       return '#GBVS #GranblueFantasy';
+    case 'Granblue Fantasy Versus: Rising':
+      return '#GBVSR #GranblueFantasy';
     case 'Under Night In-Birth Exe:Late[cl-r]':
       return '#UNICLR #inbirth';
+    case 'Under Night In-Birth II Sys:Celes':
+       return '#UNISC #UNI2 #inbirth';
     case 'Guilty Gear: Strive':
       return '#GGST #GuiltyGear';
     case 'Guilty Gear Xrd REV2':
       return '#GGXRD #GuiltyGear';
     case 'Melty Blood: Type Lumina':
-      return '#MBTL #MBTL_Tournament';
+      return '#MBTL #MeltyBlood';
     case 'BlazBlue: Central Fiction':
       return '#BBCF #BlazBlue';
     case 'Guilty Gear XX Accent Core':
