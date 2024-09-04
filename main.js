@@ -217,6 +217,8 @@ async function parseStartGGMatches(body) {
   }
 
   const startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
+  console.log('New Error');
+  console.log(startGGNames.gameName);
   const gameName = startGGNames.gameName;
   const tournamentName = startGGNames.tournamentName;
   const startGGID = startGGNames.id;
