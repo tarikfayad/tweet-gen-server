@@ -569,7 +569,7 @@ const getStreamQueue = async function(tourneySlug){
 
       if (player1StringParts.length > 1) {
         player1Name = player1StringParts[player1StringParts.length - 1].trim();
-        player1Tag = mergeSponsorTags(player1StringParts.pop());
+        player1Tag = player1StringParts[0].trim();
       } else {
         player1Tag = ''
         player1Name = player1FullString;
@@ -587,7 +587,7 @@ const getStreamQueue = async function(tourneySlug){
 
       if (player2StringParts.length > 1) {
         player2Name = player2StringParts[player2StringParts.length - 1].trim();
-        player2Tag = mergeSponsorTags(player2StringParts.pop());
+        player2Tag = player2StringParts[0].trim();
         
       } else {
         player2Tag = ''
