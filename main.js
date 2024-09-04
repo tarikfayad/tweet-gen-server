@@ -269,127 +269,75 @@ async function parseStartGGMatches(body) {
   console.log(body.game);
 
   if (body.button === 'stream-queue') {
-    return await startgg.getStreamQueue(body.tournament_slug)
+      return await startgg.getStreamQueue(body.tournament_slug);
   }
 
   if (body.button === 'update-startgg') {
-    console.log('Start Body: ' + body);
-    return await startgg.reportSet(body.setID, body.winnerID, body.p1ID, body.p1Score, body.p2ID, body.p2Score)
+      console.log('Start Body: ' + JSON.stringify(body));
+      return await startgg.reportSet(body.setID, body.winnerID, body.p1ID, body.p1Score, body.p2ID, body.p2Score);
   }
 
-  let startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
-  gameName = startGGNames["gameName"];
-  tournamentName = startGGNames["tournamentName"];
-  startGGID = startGGNames["id"];
-  let status = await startgg.getEventStatus(body['tournament_slug'], startGGID);
+  const startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
+  const gameName = startGGNames.gameName;
+  const tournamentName = startGGNames.tournamentName;
+  const startGGID = startGGNames.id;
+  const status = await startgg.getEventStatus(body.tournament_slug, startGGID);
+
+  // Helper function to return error message
+  const getErrorMessage = () => [{
+      'error': '⚠️ This command only works if the bracket is ACTIVE.'
+  }];
+
+  // Helper function to return message
+  const getMessage = (message) => [{
+      'message': message
+  }];
 
   switch (body.button) {
-    case 'starting-soon':
-      return [{
-        'message': 'Boutta start in about 30 minutes! 💪\n\n[EMBED LATEST REMINDER TWEET]'
-      }];
-      break;
-    case 'kickoff':
-
-      return [{
-        'message': "Aaaand we're live with " + tournamentName + "!\n\n🎙️ @" + body.com1.replace("@", "") + " & @" + body.com2.replace("@", "") + "\n⚔️ " + body.bracket + "\n\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
-      }];
-      break;
-    case 'top-16':
-      return [{
-        'message': "Top 16 is decided!\n\nStop by the stream and place your bets:\n\n⚔️ " + body.bracket + "\n📺 https://twitch.tv/ImpurestClub\n💰 " + body.matcherino + "\n\n" + getHashtags(gameName)
-      }];
-      break;
-    case 'top-8':
-      if (status === 'ACTIVE') {
-        return [{
-          'message': await startgg.getTop8(body['tournament_slug'], startGGID, body.game)
-        }]
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is ACTIVE.'
-        }];
-      }
-      break;
-    case 'top-4':
-      if (status === 'ACTIVE') {
-        return [{
-          'message': await startgg.getTop4(body['tournament_slug'], startGGID, gameName)
-        }]
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is ACTIVE.'
-        }];
-      }
-      break;
-    case 'losers-semis':
-      if (status === 'ACTIVE') {
-        return [{
-          'message': await startgg.getLosersSemiFinals(body['tournament_slug'], startGGID, gameName, body.matcherino)
-        }]
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is ACTIVE.'
-        }];
-      }
-      break;
-    case 'losers-finals':
-      if (status === 'ACTIVE') {
-        return [{
-          'message': await startgg.getLosersFinals(body['tournament_slug'], startGGID, gameName, body.matcherino)
-        }]
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is ACTIVE.'
-        }];
-      }
-      break;
-    case 'grand-finals':
-      if (status === 'ACTIVE') {
-        return [{
-          'message': await startgg.getGrandFinal(body['tournament_slug'], startGGID, gameName, body.matcherino)
-        }]
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is ACTIVE.'
-        }];
-      }
-      break;
-    case 'reset':
-      if (status === 'ACTIVE') {
-        return [{
-          'message': await startgg.getGrandFinalReset(body['tournament_slug'], startGGID, gameName, body.matcherino)
-        }]
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is ACTIVE.'
-        }];
-      }
-      break;
-    case 'results':
-      if (status === 'COMPLETED') {
-        var finalResults = await startgg.getFinalResults(body['tournament_slug'], startGGID);
-        return [{
-          'message': tournamentName + ' Results:\n\n' + finalResults + '\n\nBracket: ' + body.bracket + '\nVOD:'
-        }];
-      } else {
-        return [{
-          'error': '⚠️ This command only works if the bracket is COMPLETED.'
-        }];
-      }
-      break;
-
-    case 'populate-top-8':
-      if (status === 'ACTIVE' || status === 'COMPLETED') {
-
-        return await startgg.getTop8Players(body['tournament_slug'], startGGID);
-      } else {
-        return [{
-          'error': '⚠️ Something went wrong fetching top 8!'
-        }];
-      }
-      break;
-    default:
+      case 'starting-soon':
+          return getMessage('Boutta start in about 30 minutes! 💪\n\n[EMBED TWITTER STREAM]');
+      case 'kickoff':
+          return getMessage(`Aaaand we're live with ${tournamentName}!\n\n🎙️ @${body.com1.replace("@", "")} & @${body.com2.replace("@", "")}\n⚔️ ${body.bracket}\n\n📺 https://twitch.tv/ImpurestClub\n💰 ${body.matcherino}\n\n${getHashtags(gameName)}`);
+      case 'top-16':
+          return getMessage(`Top 16 is decided!\n\nStop by the stream and place your bets:\n\n⚔️ ${body.bracket}\n📺 https://twitch.tv/ImpurestClub\n💰 ${body.matcherino}\n\n${getHashtags(gameName)}`);
+      case 'top-8':
+      case 'top-4':
+      case 'losers-semis':
+      case 'losers-finals':
+      case 'grand-finals':
+      case 'reset':
+          if (status === 'ACTIVE') {
+              const fetchFunctions = {
+                  'top-8': () => startgg.getTop8(body.tournament_slug, startGGID, body.game),
+                  'top-4': () => startgg.getTop4(body.tournament_slug, startGGID, gameName),
+                  'losers-semis': () => startgg.getLosersSemiFinals(body.tournament_slug, startGGID, gameName, body.matcherino),
+                  'losers-finals': () => startgg.getLosersFinals(body.tournament_slug, startGGID, gameName, body.matcherino),
+                  'grand-finals': () => startgg.getGrandFinal(body.tournament_slug, startGGID, gameName, body.matcherino),
+                  'reset': () => startgg.getGrandFinalReset(body.tournament_slug, startGGID, gameName, body.matcherino)
+              };
+              return getMessage(await fetchFunctions[body.button]());
+          } else {
+              return getErrorMessage();
+          }
+      case 'results':
+          if (status === 'COMPLETED') {
+              const finalResults = await startgg.getFinalResults(body.tournament_slug, startGGID);
+              return getMessage(`${tournamentName} Results:\n\n${finalResults}\n\nBracket: ${body.bracket}\nVOD:`);
+          } else {
+              return [{
+                  'error': '⚠️ This command only works if the bracket is COMPLETED.'
+              }];
+          }
+      case 'populate-top-8':
+          if (status === 'ACTIVE' || status === 'COMPLETED') {
+              return await startgg.getTop8Players(body.tournament_slug, startGGID);
+          } else {
+              return [{
+                  'error': '⚠️ Something went wrong fetching top 8!'
+              }];
+          }
+      default:
+          return []; // Handle default case if needed
   }
 }
 
