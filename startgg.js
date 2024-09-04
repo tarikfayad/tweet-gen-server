@@ -22,8 +22,6 @@ const {
   formatGrandFinalResetString
 } = require('./string-formatter');
 
-
-
 const getEventInfo = async function (slug) {
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String) {
@@ -223,7 +221,7 @@ const getTop8Players = async function (slug, eventID) {
     let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
     let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
 
-    return await formatTop8Players(sets, eventID);
+    return await formatTop8Players(sets);
   } catch (error) {
     return logError(error);
   }
