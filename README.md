@@ -1,7 +1,7 @@
 # WASD StreamControl Server
-The stream control server is the backend that accompanies [WASD StreamControl](https://github.com/WASD-Gaming/wasd-streamcontrol).
+**VERY** simple server that serves as the backend for [WASD StreamControl](https://github.com/WASD-Gaming/wasd-streamcontrol).
 
-It's how the application generates tweets, pulls the Startgg stream queue, updates scores on Startgg, etc.
+It allows the application to generate tweets, pull the Startgg stream queue, update scores on Startgg, etc.
 
 Challonge support is _technically_ here but it's dated and missing many of the features I've added for Startgg as I no longer use Challonge to run brackets.
 
