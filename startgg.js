@@ -2,21 +2,31 @@ require('dotenv').config();
 const axios = require('axios');
 
 const {
-    getStandingsWithID,
-    getNumEntrants,
-    getStatusWithID,
-    getSetsWithID,
-    compareGameStrings,
-    getHashtags,
-    extractPlayerInfo,
-    mergeSponsorTags,
-    logError
+  getStandingsWithID,
+  getNumEntrants,
+  getStatusWithID,
+  getSetsWithID,
+  compareGameStrings,
+  extractPlayerInfo,
+  logError
 } = require('./utils');
 
+const {
+  formatResultsString,
+  formatTop8String,
+  formatTop8Players,
+  formatTop4String,
+  formatLosersSemifinalsString,
+  formatLosersFinalString,
+  formatGrandFinalString,
+  formatGrandFinalResetString
+} = require('./string-formatter');
 
-const getEventInfo = async function(slug) {
-    var data = JSON.stringify({
-        query: `query TournamentQuery($slug: String) {
+
+
+const getEventInfo = async function (slug) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
         tournament(slug: $slug) {
             name
           events {
@@ -37,28 +47,28 @@ const getEventInfo = async function(slug) {
           }
         }
       }`,
-        variables: {"slug":slug}
-      });
-      
-      var config = {
-        headers: { 
-          'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-          'Content-Type': 'application/json'
-        }
-      };
+    variables: { "slug": slug }
+  });
 
-      let axiosAPI = axios.create(config);
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
 
-      try {
-        return await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-      } catch (error) {
-        return logError(error);
-      }
+  let axiosAPI = axios.create(config);
+
+  try {
+    return await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+  } catch (error) {
+    return logError(error);
+  }
 }
 
-const getGameTournamentNameAndID = async function(slug, shortCode) {
-    var data = JSON.stringify({
-        query: `query TournamentQuery($slug: String) {
+const getGameTournamentNameAndID = async function (slug, shortCode) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String) {
         tournament(slug: $slug) {
             name
           events {
@@ -70,53 +80,53 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
           }
           }
         }`,
-        variables: {"slug":slug}
-      });
-      
-      var config = {
-        headers: { 
-          'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-          'Content-Type': 'application/json'
+    variables: { "slug": slug }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+
+    console.log('getGameTournamentNameAndID: ' + JSON.stringify(response.data));
+
+    let tournamentName, eventID, gameName;
+
+    let eventArray = response.data['data']['tournament']['events'];
+    let information;
+    eventArray.forEach(event => {
+
+      if (compareGameStrings(shortCode, event.videogame.displayName)) {
+        console.log(event);
+        eventID = event.id;
+        gameName = event.videogame.displayName;
+        tournamentName = response.data['data']['tournament']['name'];
+
+        information = {
+          'gameName': gameName,
+          'tournamentName': tournamentName,
+          'id': eventID
         }
-      };
-
-      let axiosAPI = axios.create(config);
-
-      try {
-        let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-        
-        console.log('getGameTournamentNameAndID: ' + JSON.stringify(response.data));
-
-        let tournamentName, eventID, gameName;
-
-        let eventArray = response.data['data']['tournament']['events'];
-        let information;
-        eventArray.forEach(event => {
-
-          if(compareGameStrings(shortCode, event.videogame.displayName)) {
-            console.log(event);
-              eventID = event.id;
-              gameName = event.videogame.displayName;
-              tournamentName = response.data['data']['tournament']['name'];
-
-              information = {
-                  'gameName': gameName,
-                  'tournamentName': tournamentName,
-                  'id': eventID
-              }
-          } else {
-            console.log("COMPARISON ERROR!");
-          }
-        });
-      
-        return information;
-
-      } catch (error) {
-        return logError(error);
+      } else {
+        console.log("COMPARISON ERROR!");
       }
+    });
+
+    return information;
+
+  } catch (error) {
+    return logError(error);
+  }
 }
 
-const getTop8 =  async function(slug, eventID, shortCode) {
+const getTop8 = async function (slug, eventID, shortCode) {
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String, $eventID: ID) {
       tournament(slug: $slug) {
@@ -142,33 +152,33 @@ const getTop8 =  async function(slug, eventID, shortCode) {
       }
     }
   }`,
-  variables: {
-    "slug":slug,
-    "eventID":eventID
-  }
-});
-    
-var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+    variables: {
+      "slug": slug,
+      "eventID": eventID
+    }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
       'Content-Type': 'application/json'
     }
-};
+  };
 
-let axiosAPI = axios.create(config);
-try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  console.log('TOP 8 RESPONSE:');
-  console.log(response.data);
-  let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    console.log('TOP 8 RESPONSE:');
+    console.log(response.data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
 
-  return await formatTop8String(sets, eventID, shortCode);
-} catch (error) {
-  return logError(error);
+    return await formatTop8String(sets, eventID, shortCode);
+  } catch (error) {
+    return logError(error);
+  }
 }
-}
 
-const getTop8Players =  async function(slug, eventID) {
+const getTop8Players = async function (slug, eventID) {
   console.log(slug);
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String, $eventID: ID) {
@@ -195,281 +205,281 @@ const getTop8Players =  async function(slug, eventID) {
       }
     }
   }`,
-  variables: {
-    "slug":slug,
-    "eventID": eventID
-  }
-});
-    
-var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-      'Content-Type': 'application/json'
+    variables: {
+      "slug": slug,
+      "eventID": eventID
     }
-};
-
-let axiosAPI = axios.create(config);
-try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
-
-  return await formatTop8Players(sets, eventID);
-} catch (error) {
-  return logError(error);
-}
-}
-
-const getTop4 =  async function(slug, eventID, gameName) {
-  var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String, $eventID: ID) {
-      tournament(slug: $slug) {
-        events(filter: {id: $eventID}) {
-            id
-          state
-          sets(page:1, perPage: 999) {
-            pageInfo{
-              perPage: perPage,
-              page: page
-            }
-            nodes {
-              round
-              fullRoundText
-              displayScore
-              slots(includeByes: true) {
-                  entrant {
-                      name
-                  }
-              }
-            }
-          }
-      }
-    }
-  }`,
-  variables: {
-    "slug":slug,
-    "eventID": eventID
-  }
-});
-    
-var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-      'Content-Type': 'application/json'
-    }
-};
-
-let axiosAPI = axios.create(config);
-try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  console.log(response.data);
-  let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
-
-  return await formatTop4String(sets, eventID, gameName);
-} catch (error) {
-  return logError(error);
-}
-}
-
-const getLosersSemiFinals =  async function(slug, eventID, gameName, matcherino) {
-  var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String, $eventID: ID) {
-      tournament(slug: $slug) {
-        events(filter: {id: $eventID}) {
-            id
-          state
-          sets(page:1, perPage: 999) {
-            pageInfo{
-              perPage: perPage,
-              page: page
-            }
-            nodes {
-              round
-              fullRoundText
-              displayScore
-              slots(includeByes: true) {
-                  entrant {
-                      name
-                  }
-              }
-            }
-          }
-      }
-    }
-  }`,
-  variables: {
-    "slug":slug,
-    "eventID": eventID
-}
-});
-    
-var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-      'Content-Type': 'application/json'
-    }
-};
-
-let axiosAPI = axios.create(config);
-try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
-  
-  return await formatLosersSemifinalsString(sets, eventID, gameName, matcherino);
-} catch (error) {
-  return logError(error);
-}
-}
-
-const getLosersFinals =  async function(slug, eventID, gameName, matcherino) {
-  var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String, $eventID: ID) {
-      tournament(slug: $slug) {
-        events(filter: {id: $eventID}) {
-            id
-          state
-          sets(page:1, perPage: 999) {
-            pageInfo{
-              perPage: perPage,
-              page: page
-            }
-            nodes {
-              round
-              fullRoundText
-              displayScore
-              slots(includeByes: true) {
-                  entrant {
-                      name
-                  }
-              }
-            }
-          }
-      }
-    }
-  }`,
-  variables: {
-    "slug":slug,
-    "eventID": eventID
-  }
-});
-    
-  var config = {
-      headers: { 
-        'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-        'Content-Type': 'application/json'
-      }
-  };
-
-  let axiosAPI = axios.create(config);
-  try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
-
-  return await formatLosersFinalString(sets, eventID, gameName, matcherino);
-  } catch (error) {
-    return logError(error);
-  }
-}
-
-const getGrandFinal =  async function(slug, eventID, gameName, matcherino) {
-  var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String, $eventID: ID) {
-      tournament(slug: $slug) {
-        events(filter: {id: $eventID}) {
-            id
-          state
-          sets(page:1, perPage: 999) {
-            pageInfo{
-              perPage: perPage,
-              page: page
-            }
-            nodes {
-              round
-              fullRoundText
-              displayScore
-              slots(includeByes: true) {
-                  entrant {
-                      name
-                  }
-              }
-            }
-          }
-      }
-    }
-  }`,
-  variables: {
-    "slug":slug,
-    "eventID": eventID
-  }
-});
-    
-var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-      'Content-Type': 'application/json'
-    }
-};
-
-let axiosAPI = axios.create(config);
-try {
-let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
-
-return await formatGrandFinalString(sets, eventID, gameName, matcherino);
-} catch (error) {
-  return logError(error);
-}
-}
-
-const getGrandFinalReset =  async function(slug, eventID, gameName, matcherino) {
-  var data = JSON.stringify({
-    query: `query TournamentQuery($slug: String, $eventID: ID) {
-      tournament(slug: $slug) {
-        events(filter: {id: $eventID}) {
-            id
-          state
-          sets(page:1, perPage: 999) {
-            pageInfo{
-              perPage: perPage,
-              page: page
-            }
-            nodes {
-              round
-              fullRoundText
-              displayScore
-              slots(includeByes: true) {
-                  entrant {
-                      name
-                  }
-              }
-            }
-          }
-      }
-    }
-  }`,
-  variables: {"slug":slug}
   });
-      
+
   var config = {
-      headers: { 
-        'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-        'Content-Type': 'application/json'
-      }
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
   };
 
   let axiosAPI = axios.create(config);
   try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
 
-  return await formatGrandFinalResetString(sets, eventID, gameName, matcherino);
+    return await formatTop8Players(sets, eventID);
   } catch (error) {
     return logError(error);
   }
 }
 
-const getFinalResults = async function(slug, eventID) {
+const getTop4 = async function (slug, eventID, gameName) {
   var data = JSON.stringify({
-      query: `query TournamentQuery($slug: String, $eventID: ID) {
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
+      tournament(slug: $slug) {
+        events(filter: {id: $eventID}) {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+    variables: {
+      "slug": slug,
+      "eventID": eventID
+    }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    console.log(response.data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+    return await formatTop4String(sets, eventID, gameName);
+  } catch (error) {
+    return logError(error);
+  }
+}
+
+const getLosersSemiFinals = async function (slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
+      tournament(slug: $slug) {
+        events(filter: {id: $eventID}) {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+    variables: {
+      "slug": slug,
+      "eventID": eventID
+    }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+    return await formatLosersSemifinalsString(sets, eventID, gameName, matcherino);
+  } catch (error) {
+    return logError(error);
+  }
+}
+
+const getLosersFinals = async function (slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
+      tournament(slug: $slug) {
+        events(filter: {id: $eventID}) {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+    variables: {
+      "slug": slug,
+      "eventID": eventID
+    }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+    return await formatLosersFinalString(sets, eventID, gameName, matcherino);
+  } catch (error) {
+    return logError(error);
+  }
+}
+
+const getGrandFinal = async function (slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
+      tournament(slug: $slug) {
+        events(filter: {id: $eventID}) {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+    variables: {
+      "slug": slug,
+      "eventID": eventID
+    }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+    return await formatGrandFinalString(sets, eventID, gameName, matcherino);
+  } catch (error) {
+    return logError(error);
+  }
+}
+
+const getGrandFinalReset = async function (slug, eventID, gameName, matcherino) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
+      tournament(slug: $slug) {
+        events(filter: {id: $eventID}) {
+            id
+          state
+          sets(page:1, perPage: 999) {
+            pageInfo{
+              perPage: perPage,
+              page: page
+            }
+            nodes {
+              round
+              fullRoundText
+              displayScore
+              slots(includeByes: true) {
+                  entrant {
+                      name
+                  }
+              }
+            }
+          }
+      }
+    }
+  }`,
+    variables: { "slug": slug }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    let sets = getSetsWithID(eventID, response.data['data']['tournament']['events']);
+
+    return await formatGrandFinalResetString(sets, eventID, gameName, matcherino);
+  } catch (error) {
+    return logError(error);
+  }
+}
+
+const getFinalResults = async function (slug, eventID) {
+  var data = JSON.stringify({
+    query: `query TournamentQuery($slug: String, $eventID: ID) {
           tournament(slug: $slug) {
             events(filter: {id: $eventID}) {
               id
@@ -490,14 +500,14 @@ const getFinalResults = async function(slug, eventID) {
           }
         }
       }`,
-    variables: {"slug":slug}
+    variables: { "slug": slug }
   });
-      
+
   var config = {
-      headers: { 
-        'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
-        'Content-Type': 'application/json'
-      }
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
+      'Content-Type': 'application/json'
+    }
   };
 
   let axiosAPI = axios.create(config);
@@ -506,13 +516,13 @@ const getFinalResults = async function(slug, eventID) {
     let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
     let standings = getStandingsWithID(eventID, response.data['data']['tournament']['events']);
     let numEntrants = getNumEntrants(eventID, response.data['data']['tournament']['events']);
-    return await formatResultsString(standings, numEntrants, eventID); 
+    return await formatResultsString(standings, numEntrants, eventID);
   } catch (error) {
     return logError(error);
   }
 }
 
-const getPlayerTwitterHandle = async function(playerHandle, eventID){
+const getPlayerTwitterHandle = async function (playerHandle, eventID) {
   var data = JSON.stringify({
     query: `query TournamentQuery($eventID: ID!, $playerHandle: String) {
       event(id: $eventID) {
@@ -540,14 +550,14 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
       }
     }`,
     variables: {
-      "eventID":eventID,
+      "eventID": eventID,
       "playerHandle": playerHandle
-  }
+    }
   });
-  
+
   var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
       'Content-Type': 'application/json'
     }
   };
@@ -560,10 +570,10 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
     if (!authorizations) handle = playerHandle;
     else {
       authorizations.forEach(authorization => {
-        if(authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
+        if (authorization['type'] === 'TWITTER') handle = authorization['externalUsername'];
       });
 
-      if(!handle) handle = playerHandle;
+      if (!handle) handle = playerHandle;
       else handle = '@' + handle;
     }
     return handle;
@@ -572,7 +582,7 @@ const getPlayerTwitterHandle = async function(playerHandle, eventID){
   }
 }
 
-const getStreamQueue = async function(tourneySlug){
+const getStreamQueue = async function (tourneySlug) {
   var data = JSON.stringify({
     query: `query StreamQueueOnTournament($tourneySlug: String!) {
   tournament(slug: $tourneySlug) {
@@ -596,13 +606,13 @@ const getStreamQueue = async function(tourneySlug){
   }
 }`,
     variables: {
-      "tourneySlug":tourneySlug
-  }
+      "tourneySlug": tourneySlug
+    }
   });
-  
+
   var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
       'Content-Type': 'application/json'
     }
   };
@@ -610,14 +620,14 @@ const getStreamQueue = async function(tourneySlug){
   let axiosAPI = axios.create(config);
   try {
     let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-    let formatedSets =[];
+    let formatedSets = [];
     let sets = response.data?.data?.tournament?.streamQueue?.[0]?.sets ?? null;
-    
+
     if (sets != null) {
-      sets.forEach(function(set){
+      sets.forEach(function (set) {
         let setID = set['id'];
         let round = set['fullRoundText']
-        
+
         if (round.toLowerCase().endsWith("final")) {
           round += "s";
         }
@@ -643,7 +653,7 @@ const getStreamQueue = async function(tourneySlug){
           'player2Name': player2Name,
           'player2ID': player2ID,
         }
-    
+
         formatedSets.push(formatedSet)
       });
     } else {
@@ -655,12 +665,10 @@ const getStreamQueue = async function(tourneySlug){
   }
 }
 
-
-
-const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
+const reportSet = async function (setID, winnerID, p1ID, p1Score, p2ID, p2Score) {
 
   let gameNumber = 1
-  let gameArray =[]
+  let gameArray = []
 
   for (let i = 0; i < p1Score; i++) {
     let game = {
@@ -692,12 +700,12 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
       "setId": setID,
       "winnerId": winnerID,
       "gameData": gameArray
-  }
+    }
   });
-  
+
   var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
       'Content-Type': 'application/json'
     }
   };
@@ -708,7 +716,7 @@ const reportSet = async function(setID, winnerID, p1ID, p1Score, p2ID, p2Score){
   console.log(response.data.errors)
 }
 
-const getEventStatus = async function(slug, eventID) {
+const getEventStatus = async function (slug, eventID) {
   var data = JSON.stringify({
     query: `query TournamentQuery($slug: String) {
       tournament(slug: $slug) {
@@ -718,434 +726,27 @@ const getEventStatus = async function(slug, eventID) {
       }
     }
   }`,
-  variables: {"slug":slug}
-});
-    
-var config = {
-    headers: { 
-      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN, 
+    variables: { "slug": slug }
+  });
+
+  var config = {
+    headers: {
+      'Authorization': 'Bearer ' + process.env.START_GG_BEARER_TOKEN,
       'Content-Type': 'application/json'
     }
-};
+  };
 
-let axiosAPI = axios.create(config);
-try {
-  let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  let status = getStatusWithID(eventID, response.data['data']['tournament']['events']);
+  let axiosAPI = axios.create(config);
+  try {
+    let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
+    let status = getStatusWithID(eventID, response.data['data']['tournament']['events']);
 
-  return status;
+    return status;
   } catch (error) {
     return logError(error);
   }
 }
 
-// String Formatting Methods
-async function formatResultsString(standings, numEntrants, eventID) {
-  console.log('Getting Tournament Results . . .');
-
-  const results = [];
-  const topThree = ['🏆', '🥈', '🥉'];
-
-  // Define a map for placements to emojis
-  const placementMap = {
-    1: '🏆',
-    2: '🥈',
-    3: '🥉',
-    4: '4️⃣',
-    5: '5️⃣',
-    7: '7️⃣'
-  };
-
-  // Return top 3 if there are less than 16 entries
-  if (numEntrants < 16) {
-    for (let i = 0; i < 3; i++) {
-      const participant = standings[i];
-      const handle = await getPlayerTwitterHandle(participant.entrant.name, eventID);
-      results.push(`${topThree[i]} ${handle}`);
-    }
-  } else {
-    for (let i = 0; i < 8; i++) {
-      const participant = standings[i];
-      const handle = await getPlayerTwitterHandle(participant.entrant.name, eventID);
-      const placementString = placementMap[participant.placement] || ''; // Default to empty string if placement is not mapped
-      results.push(`${placementString} ${handle}`);
-    }
-  }
-
-  return results.join('\n');
-}
-
-async function formatTop8String(sets, eventID, shortCode) {
-  console.log('Getting Tournament Top 8 from Startgg. . .');
-
-  let losersRound;
-  let winners = [];
-  let losers = [];
-  let losersRoundSet = false;
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Winners Semi-Final') {
-      let handles = [];
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-      winners.push(handles);
-    } else if (set['fullRoundText'] === 'Losers Quarter-Final') {
-      if(!losersRoundSet) {
-        losersRound = set['round'] + 1;
-        losersRoundSet = true;
-      }
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['round'] === losersRound) {
-      let handles = [];
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-      losers.push(handles);
-    }
-  }
-
-  return `Our #${shortCode} Top 8 is set!
-  
-  Top 8 Winners:
-  ⚔️ ${winners[0][0]} vs ${winners[0][1]}
-  ⚔️ ${winners[1][0]} vs ${winners[1][1]}
-  
-  Top 8 Losers:
-  ⚔️ ${losers[0][0]} vs ${losers[0][1]}
-  ⚔️ ${losers[1][0]} vs ${losers[1][1]}
-  
-  Stream links in reply 👇`;
-
-}
-
-async function formatTop8Players(sets, eventID) {
-  let losersRound;
-  let winners = [];
-  let losers = [];
-  let losersRoundSet = false;
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    console.log('SET');
-    console.log(set);
-    if(set['fullRoundText'] === 'Winners Semi-Final') {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-
-      winners.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    } else if (set['fullRoundText'] === 'Losers Quarter-Final') {
-      if(!losersRoundSet) {
-        losersRound = set['round'] + 1;
-        losersRoundSet = true;
-      }
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    console.log('SET');
-    console.log(set);
-    if(set['fullRoundText'] === 'Winners Final') {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-
-      winners.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    console.log('SET');
-    console.log(set);
-    if(set['fullRoundText'] === 'Grand Final') {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-
-      winners.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['round'] === losersRound) {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-      
-      losers.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Losers Quarter-Final') {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-      
-      losers.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Losers Semi-Final') {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-      
-      losers.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    }
-  }
-
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Losers Final') {
-      let p1Handle, p2Handle;
-
-      if (set['slots'][0]['entrant'] === null) p1Handle = '';
-      else if (set['slots'][0]['entrant']['name']) p1Handle = set['slots'][0]['entrant']['name'];
-      else p1Handle = '';
-
-      if (set['slots'][1]['entrant'] === null) p2Handle = '';
-      else if (set['slots'][1]['entrant']['name']) p2Handle = set['slots'][1]['entrant']['name'];
-      else p2Handle = '';
-      
-      losers.push({
-        'player1':p1Handle,
-        'player2': p2Handle,
-        'player1score': 0,
-        'player2score': 0
-      });
-    }
-  }
-
-  console.log(winners);
-  console.log(losers);
-
-  return [{
-    'matches': [
-      {
-        'winners': winners
-      },
-      {
-        'losers': losers
-      }
-    ]
-  }];
-}
-
-async function formatTop4String(sets, eventID, gameName) {
-  console.log('Getting Winners Finals from Startgg . . .');
-
-  let handles = [];
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Winners Final') {
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-    }
-  }
-
-  console.log(handles);
-
-  return `We're in the Top 4 home stretch!
-  
-  First up ➡️ ${handles[0]} vs ${handles[1]}
-  
-  ${getHashtags(gameName)}
-  
-  📺 https://twitch.tv/ImpurestClub`;
-
-}
-
-async function formatLosersSemifinalsString(sets, eventID, gameName, matcherino) {
-  console.log('Getting Losers Semifinals from Startgg . . .');
-
-  let handles = [];
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Losers Semi-Final') {
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-    }
-  }
-
-  console.log(handles);
-
-  return `⏬ Losers Semifinals ⏬
-  
-  🥊 ${handles[0]} vs ${handles[1]}
-  
-  💰 ${matcherino}
-  📺 https://twitch.tv/ImpurestClub
-  
-  ${getHashtags(gameName)}`;
-
-}
-
-async function formatLosersFinalString(sets, eventID, gameName, matcherino) {
-  console.log('Getting Losers Final from Startgg . . .');
-
-  let handles = [];
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Losers Final') {
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-    }
-  }
-
-  console.log(handles);
-
-  return `⚠️ Losers Finals ⚠️
-  
-  🥊 ${handles[0]} vs ${handles[1]}
-  
-  💰 ${matcherino}
-  📺 https://twitch.tv/ImpurestClub
-  
-  ${getHashtags(gameName)}`;
-
-}
-
-async function formatGrandFinalString(sets, eventID, gameName, matcherino) {
-  console.log('Getting Grand Final from Startgg . . .');
-
-  let handles = [];
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Grand Final') {
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-    }
-  }
-
-  console.log(handles);
-
-  return `🚨 GRAND FINALS! 🚨
-  
-  🥊 ${handles[0]} vs ${handles[1]}
-  
-  💰 ${matcherino}
-  📺 https://twitch.tv/ImpurestClub
-  
-  ${getHashtags(gameName)}`;
-
-}
-
-async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) {
-  console.log('Getting Grand Final Reset from Startgg . . .');
-
-  let handles = [];
-  for (var i = 0; i < sets.length; i++) {
-    let set = sets[i];
-    if(set['fullRoundText'] === 'Grand Final Reset') {
-      let p1Handle = await getPlayerTwitterHandle(set['slots'][0]['entrant']['name'], eventID);
-      let p2Handle = await getPlayerTwitterHandle(set['slots'][1]['entrant']['name'], eventID);
-      handles.push(p1Handle);
-      handles.push(p2Handle);
-    }
-  }
-
-  console.log(handles);
-
-  return `WE HAVE A RESET!
-  
-  🥊 ${handles[0]} vs ${handles[1]}
-  
-  💰 ${matcherino}
-  📺 https://twitch.tv/ImpurestClub
-  
-  ${getHashtags(gameName)}`;
-
-}
-
 module.exports = {
-    getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset, getStreamQueue, reportSet
+  getEventInfo, getGameTournamentNameAndID, getFinalResults, getEventStatus, getTop8, getTop8Players, getTop4, getLosersSemiFinals, getLosersFinals, getGrandFinal, getGrandFinalReset, getStreamQueue, reportSet, getPlayerTwitterHandle
 }
