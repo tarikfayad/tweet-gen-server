@@ -86,7 +86,7 @@ async function formatTop8String(sets, eventID, shortCode) {
 
 }
 
-async function formatTop8Players(sets, eventID) {
+async function formatTop8Players(sets) {
     let losersRound;
     let winners = [];
     let losers = [];
