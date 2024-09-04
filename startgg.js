@@ -1174,11 +1174,6 @@ function sanitizeString(str) {
             .replace(/--+/g, '-');    // Replace multiple dashes with a single dash
 }
 
-// function extractGame (url) {
-//     var pathArray = url.split( '/' );
-//     return pathArray[6].replace('singles', '');
-// }
-
 function getGameNameFromShortCode(shortCode) {
   switch (shortCode) {
     case 'BBCF':
