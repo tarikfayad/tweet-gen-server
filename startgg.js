@@ -77,7 +77,7 @@ const getGameTournamentNameAndID = async function(slug, shortCode) {
           console.log(event);
             eventID = event.id;
             gameName = event.videogame.displayName;
-            tournamentName = event.name;
+            tournamentName = response.data['data']['tournament']['name'];
 
             information = {
                 'gameName': gameName,
@@ -591,8 +591,7 @@ const getStreamQueue = async function(tourneySlug){
         player2Name = player2StringParts[player2StringParts.length - 1].trim();
         // player2Tag = player2StringParts[0].trim();
         let playerTags = player2StringParts.slice(0, -1).map(part => part.trim());
-        player2Tag = mergeSponsorTags(playerTags);
-        
+        player2Tag = mergeSponsorTags(playerTags);    
       } else {
         player2Tag = ''
         player2Name = player2FullString;
