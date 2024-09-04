@@ -549,74 +549,78 @@ const getStreamQueue = async function(tourneySlug){
 
   let axiosAPI = axios.create(config);
   let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
-  let sets = response.data['data']['tournament']['streamQueue'][0]['sets'];
   let formatedSets =[];
+  let sets = response.data?.data?.tournament?.streamQueue?.[0]?.sets ?? null;
   
-  sets.forEach(function(set){
-    let setID = set['id'];
-    let round = set['fullRoundText']
-    
-    if (round.toLowerCase().endsWith("final")) {
-      round += "s";
-    }
-
-    let player1Tag, player1Name, player1ID;
-    let player2Tag, player2Name, player2ID;
-
-    if(set['slots'][0]['entrant'] != null) {
-      let player1FullString = set['slots'][0]['entrant']['name']
-      let player1StringParts = player1FullString.split('|');
-
-      if (player1StringParts.length > 1) {
-        player1Name = player1StringParts[player1StringParts.length - 1].trim();
-        // player1Tag = player1StringParts[0].trim();
-        let playerTags = player1StringParts.slice(0, -1).map(part => part.trim());
-        player1Tag = mergeSponsorTags(playerTags);
-      } else {
-        player1Tag = ''
-        player1Name = player1FullString;
+  if (sets != null) {
+    sets.forEach(function(set){
+      let setID = set['id'];
+      let round = set['fullRoundText']
+      
+      if (round.toLowerCase().endsWith("final")) {
+        round += "s";
       }
-      player1ID = set['slots'][0]['entrant']['id'];
-    } else {
-      player1Tag = '';
-      player1Name = '??';
-      player1ID = 0;
-    }
-
-    if(set['slots'][1]['entrant'] != null) {
-      let player2FullString = set['slots'][1]['entrant']['name']
-      let player2StringParts = player2FullString.split('|');
-
-      if (player2StringParts.length > 1) {
-        player2Name = player2StringParts[player2StringParts.length - 1].trim();
-        // player2Tag = player2StringParts[0].trim();
-        let playerTags = player2StringParts.slice(0, -1).map(part => part.trim());
-        player2Tag = mergeSponsorTags(playerTags);    
+  
+      let player1Tag, player1Name, player1ID;
+      let player2Tag, player2Name, player2ID;
+  
+      if(set['slots'][0]['entrant'] != null) {
+        let player1FullString = set['slots'][0]['entrant']['name']
+        let player1StringParts = player1FullString.split('|');
+  
+        if (player1StringParts.length > 1) {
+          player1Name = player1StringParts[player1StringParts.length - 1].trim();
+          // player1Tag = player1StringParts[0].trim();
+          let playerTags = player1StringParts.slice(0, -1).map(part => part.trim());
+          player1Tag = mergeSponsorTags(playerTags);
+        } else {
+          player1Tag = ''
+          player1Name = player1FullString;
+        }
+        player1ID = set['slots'][0]['entrant']['id'];
       } else {
-        player2Tag = ''
-        player2Name = player2FullString;
+        player1Tag = '';
+        player1Name = '??';
+        player1ID = 0;
       }
-
-      player2ID = set['slots'][1]['entrant']['id'];
-    } else {
-      player2Tag = '';
-      player2Name = '??';
-      player2ID = 0;
-    }
-
-    let formatedSet = {
-      'id': setID,
-      'round': round,
-      'player1Tag': player1Tag,
-      'player1Name': player1Name,
-      'player1ID': player1ID,
-      'player2Tag': player2Tag,
-      'player2Name': player2Name,
-      'player2ID': player2ID,
-    }
-
-    formatedSets.push(formatedSet)
-  });
+  
+      if(set['slots'][1]['entrant'] != null) {
+        let player2FullString = set['slots'][1]['entrant']['name']
+        let player2StringParts = player2FullString.split('|');
+  
+        if (player2StringParts.length > 1) {
+          player2Name = player2StringParts[player2StringParts.length - 1].trim();
+          // player2Tag = player2StringParts[0].trim();
+          let playerTags = player2StringParts.slice(0, -1).map(part => part.trim());
+          player2Tag = mergeSponsorTags(playerTags);    
+        } else {
+          player2Tag = ''
+          player2Name = player2FullString;
+        }
+  
+        player2ID = set['slots'][1]['entrant']['id'];
+      } else {
+        player2Tag = '';
+        player2Name = '??';
+        player2ID = 0;
+      }
+  
+      let formatedSet = {
+        'id': setID,
+        'round': round,
+        'player1Tag': player1Tag,
+        'player1Name': player1Name,
+        'player1ID': player1ID,
+        'player2Tag': player2Tag,
+        'player2Name': player2Name,
+        'player2ID': player2ID,
+      }
+  
+      formatedSets.push(formatedSet)
+    });
+  } else {
+    console.log("No stream sets to pull from Queue!");
+  }
   return formatedSets;
 }
 
