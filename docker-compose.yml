@@ -1,9 +1,10 @@
-version: '3'  # Updated version
 services:
   app:
     build: .
+    image: impurestclub/streamcontrol:1.0
     env_file:
-      - .env
+      - path: .env
+        required: true
     ports:
       - "5001:5001"  # Map port 5001 in the container to port 5001 on the host
     restart: unless-stopped

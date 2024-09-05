@@ -206,7 +206,6 @@ async function parseStartGGMatches(body) {
   console.log('BUTTON:');
   console.log(body.button);
   console.log(body.game);
-
   if (body.button === 'stream-queue') {
       return await startgg.getStreamQueue(body.tournament_slug);
   }

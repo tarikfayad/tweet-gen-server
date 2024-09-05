@@ -120,7 +120,6 @@ const getGameTournamentNameAndID = async function (slug, shortCode) {
     return information;
 
   } catch (error) {
-    console.log(error);
     return logError(error);
   }
 }
@@ -617,6 +616,7 @@ const getStreamQueue = async function (tourneySlug) {
   };
 
   let axiosAPI = axios.create(config);
+
   try {
     let response = await axiosAPI.post(process.env.START_GG_BASE_URL, data);
     let formatedSets = [];
