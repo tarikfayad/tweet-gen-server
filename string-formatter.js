@@ -1,5 +1,6 @@
-async function formatResultsString(standings, numEntrants, eventID) {
-    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
+const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
+
+async function formatResultsString(standings, numEntrants, eventID) { 
 
     console.log('Getting Tournament Results . . .');
 
