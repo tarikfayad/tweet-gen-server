@@ -1,6 +1,5 @@
-const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
-
 async function formatResultsString(standings, numEntrants, eventID) { 
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     console.log('Getting Tournament Results . . .');
 
@@ -38,6 +37,7 @@ async function formatResultsString(standings, numEntrants, eventID) {
 
 async function formatTop8String(sets, eventID, shortCode) {
     console.log('Getting Tournament Top 8 from Startgg. . .');
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     let losersRound;
     let winners = [];
@@ -158,6 +158,7 @@ async function formatTop8Players(sets) {
 
 async function formatTop4String(sets, eventID, gameName) {
     console.log('Getting Winners Finals from Startgg . . .');
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     let handles = [];
     for (var i = 0; i < sets.length; i++) {
@@ -184,6 +185,7 @@ async function formatTop4String(sets, eventID, gameName) {
 
 async function formatLosersSemifinalsString(sets, eventID, gameName, matcherino) {
     console.log('Getting Losers Semifinals from Startgg . . .');
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     let handles = [];
     for (var i = 0; i < sets.length; i++) {
@@ -211,6 +213,7 @@ async function formatLosersSemifinalsString(sets, eventID, gameName, matcherino)
 
 async function formatLosersFinalString(sets, eventID, gameName, matcherino) {
     console.log('Getting Losers Final from Startgg . . .');
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     let handles = [];
     for (var i = 0; i < sets.length; i++) {
@@ -238,6 +241,7 @@ async function formatLosersFinalString(sets, eventID, gameName, matcherino) {
 
 async function formatGrandFinalString(sets, eventID, gameName, matcherino) {
     console.log('Getting Grand Final from Startgg . . .');
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     let handles = [];
     for (var i = 0; i < sets.length; i++) {
@@ -265,6 +269,7 @@ async function formatGrandFinalString(sets, eventID, gameName, matcherino) {
 
 async function formatGrandFinalResetString(sets, eventID, gameName, matcherino) {
     console.log('Getting Grand Final Reset from Startgg . . .');
+    const { getPlayerTwitterHandle } = await import('./startgg.js'); // This feels janky but it avoid circular dependency 
 
     let handles = [];
     for (var i = 0; i < sets.length; i++) {
