@@ -10,6 +10,28 @@ const startgg = require('./startgg.js');
 
 const { getHashtags } = require('./utils');
 
+// Recursively log all directories
+function logDirectories(startPath) {
+  console.log(`Listing directories in: ${startPath}`);
+  
+  fs.readdir(startPath, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      console.error(`Error reading directory: ${startPath}`, err);
+      return;
+    }
+
+    files.forEach(file => {
+      if (file.isDirectory()) {
+        console.log(`Directory: ${path.join(startPath, file.name)}`);
+        logDirectories(path.join(startPath, file.name)); // Recursively list subdirectories
+      }
+    });
+  });
+}
+
+// Start listing directories from root
+logDirectories('/');
+
 // Rest API Methods. These are the endpoints that the Svelte app will hit.
 app.use(bodyParser.json());
 app.use(cors());
@@ -50,31 +72,6 @@ app.use((err, req, res, next) => {
     .status(err.status || 500)
     .json(error)
 })
-
-
-// Recursively log all directories
-function logDirectories(startPath) {
-  console.log(`Listing directories in: ${startPath}`);
-  
-  fs.readdir(startPath, { withFileTypes: true }, (err, files) => {
-    if (err) {
-      console.error(`Error reading directory: ${startPath}`, err);
-      return;
-    }
-
-    files.forEach(file => {
-      if (file.isDirectory()) {
-        console.log(`Directory: ${path.join(startPath, file.name)}`);
-        logDirectories(path.join(startPath, file.name)); // Recursively list subdirectories
-      }
-    });
-  });
-}
-
-// Start listing directories from root
-logDirectories('/');
-
-
 
 // Load SSL certificates
 const options = {
