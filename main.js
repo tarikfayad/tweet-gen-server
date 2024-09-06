@@ -51,31 +51,6 @@ app.use((err, req, res, next) => {
     .json(error)
 })
 
-
-// Recursively log all directories
-function logDirectories(startPath) {
-  console.log(`Listing directories in: ${startPath}`);
-  
-  fs.readdir(startPath, { withFileTypes: true }, (err, files) => {
-    if (err) {
-      console.error(`Error reading directory: ${startPath}`, err);
-      return;
-    }
-
-    files.forEach(file => {
-      if (file.isDirectory()) {
-        console.log(`Directory: ${path.join(startPath, file.name)}`);
-        logDirectories(path.join(startPath, file.name)); // Recursively list subdirectories
-      }
-    });
-  });
-}
-
-// Start listing directories from root
-logDirectories('/');
-
-
-
 // Load SSL certificates
 const options = {
   key: fs.readFileSync(process.env.PROD_KEY),
