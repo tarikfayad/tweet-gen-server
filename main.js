@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
 // Load SSL certificates
 const options = {
   key: fs.readFileSync(process.env.PROD_KEY),
-  cert: fs.readFileSync(process.env.PROD_CERT),
+  cert: fs.readFileSync(process.env.PROD_CERT)
 };
 
 const port = process.env.PORT || 5001;
