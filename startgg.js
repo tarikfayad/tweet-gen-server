@@ -114,6 +114,9 @@ const getGameTournamentNameAndID = async function (slug, shortCode) {
         }
       } else {
         console.log("COMPARISON ERROR!");
+        information = {
+          'error': `There is no ${shortCode} tournament at the current link. Please make sure the selected game and bracket link match.`
+        }
       }
     });
 

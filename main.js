@@ -1,4 +1,7 @@
 require('dotenv').config();
+const https = require('https');
+const fs = require('fs');
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = require('express')();
@@ -48,9 +51,17 @@ app.use((err, req, res, next) => {
     .json(error)
 })
 
-// Running the app
-const port = process.env.PORT || 5001
-app.listen(port, '0.0.0.0', () => console.log(`Tweet app backend is running on port ${port}`))
+// Load SSL certificates
+const options = {
+  key: fs.readFileSync(process.env.PROD_KEY),
+  cert: fs.readFileSync(process.env.PROD_CERT),
+};
+
+const port = process.env.PORT || 5001;
+
+https.createServer(options, app).listen(port, () => {
+  console.log(`HTTPS server running on port ${port}`);
+});
 
 // CHALLONGE SWITCH STATEMENT
 // Yes I know it's a little messy to pass along all of these variables,
@@ -216,6 +227,10 @@ async function parseStartGGMatches(body) {
   }
 
   const startGGNames = await startgg.getGameTournamentNameAndID(body.tournament_slug, body.game);
+  if (startGGNames.error) {
+    return [{ 'error': startGGNames.error }];
+  }
+
   const gameName = startGGNames.gameName;
   const tournamentName = startGGNames.tournamentName;
   const startGGID = startGGNames.id;
