@@ -52,16 +52,16 @@ app.use((err, req, res, next) => {
 })
 
 // Load SSL certificates
-// const options = {
-//   key: fs.readFileSync(process.env.PROD_KEY),
-//   cert: fs.readFileSync(process.env.PROD_CERT)
-// };
+const options = {
+  key: fs.readFileSync(process.env.PROD_KEY),
+  cert: fs.readFileSync(process.env.PROD_CERT)
+};
 
-// const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5001;
 
-// https.createServer(options, app).listen(port, () => {
-//   console.log(`HTTPS server running on port ${port}`);
-// });
+https.createServer(options, app).listen(port, () => {
+  console.log(`HTTPS server running on port ${port}`);
+});
 
 // CHALLONGE SWITCH STATEMENT
 // Yes I know it's a little messy to pass along all of these variables,
