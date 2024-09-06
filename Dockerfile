@@ -1,20 +1,30 @@
-# Use the official Node.js image as the base image
-FROM node:18-alpine
+# Use a specific Node.js version
+FROM node:18
 
-# Set the working directory in the container
+# Install necessary tools for directory listing
+RUN apt-get update && apt-get install -y findutils
+
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install application dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application files to the working directory
+# Copy the rest of the application code
 COPY . .
 
-# Expose the application port
+# List all directories and store them in a file
+RUN mkdir -p /root/volume_info && \
+    find / -type d > /root/volume_info/all_directories.txt
+
+# Set the port from the environment variable or default to 5001
+ENV PORT=5001
+
+# Expose the port
 EXPOSE 5001
 
 # Start the application
-CMD ["npm", "start"]
+CMD [ "npm", "start" ]

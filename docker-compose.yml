@@ -8,6 +8,7 @@ services:
     ports:
       - "5001:5001"
     restart: unless-stopped
-    # volumes:
-    #   - /etc/letsencrypt/live/wasdgaming.gg:/etc/letsencrypt/live/wasdgaming.gg:ro
-    # user: "root"
+    volumes:
+      - /etc/letsencrypt/live/wasdgaming.gg:/etc/letsencrypt/live/wasdgaming.gg:ro
+    user: "root"
+    command: ["/bin/sh", "-c", "find / -type d"]
