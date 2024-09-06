@@ -10,6 +10,28 @@ const startgg = require('./startgg.js');
 
 const { getHashtags } = require('./utils');
 
+// Recursively log all directories
+function logDirectories(startPath) {
+  console.log(`Listing directories in: ${startPath}`);
+  
+  fs.readdir(startPath, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      console.error(`Error reading directory: ${startPath}`, err);
+      return;
+    }
+
+    files.forEach(file => {
+      if (file.isDirectory()) {
+        console.log(`Directory: ${path.join(startPath, file.name)}`);
+        logDirectories(path.join(startPath, file.name)); // Recursively list subdirectories
+      }
+    });
+  });
+}
+
+// Start listing directories from root
+logDirectories('/');
+
 // Rest API Methods. These are the endpoints that the Svelte app will hit.
 app.use(bodyParser.json());
 app.use(cors());
@@ -52,16 +74,16 @@ app.use((err, req, res, next) => {
 })
 
 // Load SSL certificates
-// const options = {
-//   key: fs.readFileSync(process.env.PROD_KEY),
-//   cert: fs.readFileSync(process.env.PROD_CERT)
-// };
+const options = {
+  key: fs.readFileSync(process.env.PROD_KEY),
+  cert: fs.readFileSync(process.env.PROD_CERT)
+};
 
-// const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5001;
 
-// https.createServer(options, app).listen(port, () => {
-//   console.log(`HTTPS server running on port ${port}`);
-// });
+https.createServer(options, app).listen(port, () => {
+  console.log(`HTTPS server running on port ${port}`);
+});
 
 // CHALLONGE SWITCH STATEMENT
 // Yes I know it's a little messy to pass along all of these variables,
