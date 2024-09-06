@@ -1,6 +1,6 @@
 {
   "name": "wasd-streamcontrol-server",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "The server for WASD's StreamControl",
   "main": "main.js",
   "scripts": {
