@@ -106,3 +106,4 @@ dist
 # SSL Certificates
 certs
 nginx-conf
+cloudflare.ini
