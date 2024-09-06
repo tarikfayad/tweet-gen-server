@@ -50,7 +50,7 @@ app.use((err, req, res, next) => {
 
 // Running the app
 const port = process.env.PORT || 5001
-app.listen(port, () => console.log(`Tweet app backend is running on port ${port}`))
+app.listen(port, '0.0.0.0', () => console.log(`Tweet app backend is running on port ${port}`))
 
 // CHALLONGE SWITCH STATEMENT
 // Yes I know it's a little messy to pass along all of these variables,
