@@ -9,6 +9,42 @@ services:
     ports:
       - "5001:5001"  # Map port 5001 in the container to port 5001 on the host
     restart: unless-stopped
+    networks:
+      - streamcontrol-network
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
     volumes:
-      - /etc/letsencrypt/live/wasdgaming.gg:/etc/letsencrypt/live/wasdgaming.gg:ro
-    user: "root"
+      - web-root:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - app
+    networks:
+      - streamcontrol-network
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - webserver
+    command: certonly --webroot --webroot-path=/var/www/html --email dev@wasdgaming.gg --agree-tos --no-eff-email --staging -d sc.wasdgaming.gg
+  volumes:
+    certbot-etc:
+    certbot-var:
+    web-root:
+      driver: local
+      driver_opts:
+        type: none
+        device: /home/wasd-admin/Documents/docker/streamcontrol
+        o: bind
+  networks:
+    streamcontrol-network:
+      driver: bridge
