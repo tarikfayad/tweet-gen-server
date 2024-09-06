@@ -1,0 +1,5 @@
+FROM certbot/certbot:latest
+
+# Install Cloudflare DNS plugin for Certbot
+RUN apk add --no-cache python3 py3-pip \
+    && pip3 install certbot-dns-cloudflare
