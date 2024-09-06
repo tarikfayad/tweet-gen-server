@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: impurestclub/streamcontrol:1.0
+    image: impurestclub/streamcontrol:1.0.1
     env_file:
       - path: .env
         required: true
