@@ -9,5 +9,5 @@ services:
       - "5001:5001"  # Map port 5001 in the container to port 5001 on the host
     restart: unless-stopped
     volumes:
-      - /etc/letsencrypt/live/wasdgaming.gg:/etc/letsencrypt/live/wasdgaming.gg:ro
-    user: "root"
+      - ./certs/prod/origin.pem:/etc/ssl/certs/origin.pem
+      - ./certs/prod/private.key:/etc/ssl/private/private.key
