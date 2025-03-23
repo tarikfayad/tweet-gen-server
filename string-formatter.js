@@ -111,7 +111,8 @@ async function formatTop8Players(sets) {
                     'player1': p1Handle,
                     'player2': p2Handle,
                     'player1score': 0,
-                    'player2score': 0
+                    'player2score': 0,
+                    'fullRoundText': set['fullRoundText']
                 });
             }
         }
