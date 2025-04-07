@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: impurestclub/streamcontrol:1.0.1
+    image: impurestclub/streamcontrol:1.0.3
     container_name: streamcontrol
     env_file:
       - .env
